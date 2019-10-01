@@ -1,0 +1,93 @@
+<div>
+  <div class="breadcrumb-block">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Manage trek
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <div class="manage-package-block">
+    <div class="white-box">
+      <div class="table-title">
+        <div class="container-fluid px-0">
+          <div class="row">
+            <div class="col-lg-12">
+              <h5>{{ getPackagetitle.title}}</h5>             
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Tabs -->
+  <div class="tabs-block">
+      <div class="top-tab">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" @click="redirectToGeneral">
+                  <a class="nav-link active" id="home-tab" data-toggle="tab" href="#general" role="tab"
+                      aria-controls="home" aria-selected="true"><i class="fas fa-align-justify"></i>
+                      General</a>
+              </li>
+              <li class="nav-item" @click="redirectToItinerary">
+                  <a class="nav-link" id="profile-tab" data-toggle="tab" href="#itinerary" role="tab"
+                      aria-controls="profile" aria-selected="false"><i class="fas fa-calendar-check"></i>
+                      Itinerary</a>
+              </li>
+              <li class="nav-item" @click="redirectToIncludes">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#inlcudes" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-check-circle"></i>
+                      Includes</a>
+              </li>
+              <li class="nav-item" @click="redirectToExcludes">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#excludes" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-times-circle"></i>
+                      Excludes</a>
+              </li>
+              <li class="nav-item" @click="redirectToGallery">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#gallery" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-image"></i>
+                      Gallery</a>
+              </li>
+              <!-- <li class="nav-item" @click="redirectToDepartureSchedule">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#departure" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-calendar-alt"></i>
+                      Departure schedule</a>
+              </li> -->
+              <li class="nav-item" @click="redirectToUpcommingDeparture">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#booking" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-check-double"></i>
+                      Upcoming Departure</a>
+              </li>
+              <li class="nav-item" @click="redirectToBooking">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#booking" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-check-double"></i>
+                      Booking</a>
+              </li>
+              
+              <!-- <li class="nav-item" @click="redirectToGalleryPreBooking">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#prebooking" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-check"></i>
+                      Pre-booking</a>
+              </li> -->
+              <!-- <li class="nav-item" @click="redirectToOfferService">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#offerservice" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-check"></i>
+                      Offer/ Services</a>
+              </li> -->
+              <li class="nav-item" @click="redirectToReviews">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#reviews" role="tab"
+                      aria-controls="contact" aria-selected="false"><i class="fas fa-user"></i>
+                      Reviews</a>
+              </li>
+          </ul>
+      </div>
+        <router-view></router-view>
+      </div>
+    </div>
+  </div>
+  
+        
+</div>

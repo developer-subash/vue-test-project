@@ -1,0 +1,117 @@
+<div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+        <div class="container-fluid">
+            <div class="content-block">
+                <div class="error-list" v-if="ErrorsSocialAccount">
+                    <ul class="error-msg">
+                        <li v-for="(error,x) in ErrorsSocialAccount" :key="x">
+                            <div v-for="(err,i) in error" :key="i">
+                                <p> {{err}}</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="form-modified">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-2 col-form-label">
+                            Select social media
+                        </label>
+                        <div class="col-lg-3">
+                                <div class="multiselect-input" v-if="SocialMediaList">
+                                        <multiselect :options='SocialMediaList' v-model="SocialMedia.Icon" label="name"
+                                            :track-by="'name'" :custom-label="customLabel" :show-labels="false"
+                                            placeholder="Choose icon" :option-height="40">
+                                            <template slot="singleLabel" slot-scope="props"><img class="option__image"
+                                                    :src="props.option.icon_path" alt="No Man’s Sky"><span
+                                                    class="option__desc"><span
+                                                        class="option__title">{{ props.option.name }}</span></span></template>
+                                            <template slot="option" slot-scope="props"><img class="option__image"
+                                                    :src="props.option.icon_path" alt="No Man’s Sky">
+                                                <div class="option__desc"><span class="option__title">{{ props.option.name }}</span>
+                                                </div>
+                                            </template>
+                                        </multiselect>
+                                    </div>
+                        </div>
+                        
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Enter link"
+                                    v-model="SocialMedia.Link">
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" :disabled="SaveDisable" class="btn default-btn"
+                                @click.prevent="saveSocialAccount">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="empty-data">
+                        <p v-if="!SocialMediaIconLists">No Social Media List</p>
+                    </div>
+                    <div class="form-group row" v-if="SocialMediaIconLists"
+                        v-for="(social, index) in SocialMediaIconLists" :key="index">
+                        <div class="col-lg-8 offset-lg-2">
+                            <div class="includes-list-item">
+                                
+                                <div v-if="!social.IsActive" class="includes-list hoverable-list readonly">
+                                    <span v-if="social.icon" class="social-float-icons">
+                                        <i :src="social.icon"></i>
+                                    </span>
+                                    <span else class="social-float-icons">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </span>
+                                    {{social.link}}
+                                </div>
+                                <div v-else class="includes-list editable">
+                                    <div class="form-group">
+                                        <label for=""></label>
+                                        <div class="multiselect-input" v-if="SocialMediaList">
+                                        <multiselect :options='SocialMediaList' v-model="Edit.Icon" label="name"
+                                            :track-by="'name'" :custom-label="customLabel" :show-labels="false"
+                                            placeholder="Choose icon" :option-height="40">
+                                            <template slot="singleLabel" slot-scope="props"><img class="option__image"
+                                                    :src="props.option.icon_path" alt="No Man’s Sky"><span
+                                                    class="option__desc"><span
+                                                        class="option__title">{{ props.option.name }}</span></span></template>
+                                            <template slot="option" slot-scope="props"><img class="option__image"
+                                                    :src="props.option.icon_path" alt="No Man’s Sky">
+                                                <div class="option__desc"><span
+                                                        class="option__title">{{ props.option.name }}</span></div>
+                                            </template></multiselect>
+                                    </div>
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="Enter link"
+                                                v-model="Edit.Link">
+                                        </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-2">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" v-if="!StatusDisable.EditSocialMedia"
+                                    @click.prevent="editSocialAccount(social, index)"><i
+                                        class="fas fa-pen"></i></button>
+                                <button type="button" class="btn green" v-if="social.IsActive" :disabled="SaveDisable"
+                                    @click.prevent="saveEditedSocialAccount(social)"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red" v-if="social.IsActive" :disabled="SaveDisable"
+                                    @click.prevent="cancelEditedSocialAccount(social, index)"><i
+                                        class="fas fa-times"></i></button>
+                                <button type="button" class="btn red" v-if="!social.IsActive"
+                                    :disabled="StatusDisable.delete"
+                                    @click.prevent="deleteSocialAccount(social, index)"><i
+                                        class="fas fa-minus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,121 @@
+@media(min-width:768px) {
+    body {
+        font-size: 14px;
+    }
+    .dashboard nav ol {
+        font-size: 14px;
+    }
+    .sidebar-nav>.sidebar-brand {
+        font-size: 26px;
+    }
+    input {
+        height: 50px;
+        font-size: 14px;
+    }
+    .sidebar-nav i {
+        margin-right: 5px;
+    }
+    .table-title {
+        padding: 0 15px 30px 15px;
+    }
+    #wrapper.toggled {
+        padding-left: 250px;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        width: 250px;
+    }
+    .profile-icon .dropdown-menu.show {
+        left: -250px;
+        width: 300px;
+    }
+    .top-navigation .profile-icon .dropdown-menu.show a {
+        color: #6c757d;
+        font-size: 14px;
+        padding: 15px;
+    }
+    .table-container .table tbody th, .table-container .table tbody td {
+        line-height: 20px;
+        font-size: 14px;
+    }
+    .sidebar-nav li {
+        line-height: 30px;
+    }
+    #wrapper {
+        padding-left: 250px;
+    }
+    #wrapper.toggled {
+        padding-left: 0;
+    }
+    #sidebar-wrapper {
+        width: 250px;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        width: 0;
+    }
+    #page-content-wrapper {
+        padding: 20px 25px;
+        position: relative;
+    }
+    .sidebar-nav-item .dropdown-menu.show {
+        top: 12px !important;
+    }
+    .booking-table-container thead th {
+        font-size: 14px;
+    }
+    #wrapper.toggled #page-content-wrapper {
+        position: relative;
+        margin-right: 0;
+    }
+    .save-btn {
+        width: auto;
+    }
+    #menu-toggle {
+        padding: 6px 15px;
+        margin-right: 0;
+    }
+    .inline-button-block a.btn {
+        margin: 5px;
+    }
+    .default-btn {
+        font-size: 14px;
+        padding: 10px 20px;
+    }
+    .big-btn {
+        padding: 14px 60px;
+    }
+    .badge {
+        font-size: 12px;
+    }
+    .form-title h5 {
+        font-size: 18px;
+    }
+    .form-modified ::placeholder {
+        font-size: 14px;
+    }
+    .form-modified :-ms-input-placeholder {
+        font-size: 14px;
+    }
+    .form-modified ::placeholder {
+        font-size: 14px;
+    }
+    .single-line-field input {
+        margin-bottom: 0px;
+    }
+    .sidebar-nav-item .dropdown-menu.show li {
+        font-size: 16px;
+    }
+    .table-title h5 {
+        font-size: 18px;
+        margin-bottom: 0;
+        line-height: 24px;
+    }
+    .modal-wrap .add-depart .modal-dialog {
+        max-width: 900px;
+    }
+}
+
+@media(min-width:992px) {
+    .login-box {
+        padding: 30px;
+    }
+}

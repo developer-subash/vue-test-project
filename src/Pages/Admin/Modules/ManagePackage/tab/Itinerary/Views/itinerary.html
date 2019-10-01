@@ -1,0 +1,655 @@
+<div class="tab-pane fade show active" id="itinerary" role="tabpanel" aria-labelledby="itinerary-tab">
+  <div class="itinerary-tab-header">
+    <!-- <loading
+    :color="'#0fa3a9'"
+    :height="100"
+    :width="100"
+    :active.sync="ui.IsLoading"
+    :can-cancel="true"
+    :is-full-page="true"
+  ></loading> -->
+    <FlashMessage></FlashMessage>
+    <div class="header-tabs">
+      <div class="row align-items-center">
+        <div class="col-lg-10">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" v-for="(segment, index) in ItineraryList" :key="index">
+              <a class="nav-link" :class="index == ActiveTab ? 'active' : '' " id="home-tab" data-toggle="tab" href="#day1"
+                role="tab" aria-controls="home" aria-selected="false"
+                @click.prevent="selectedSegment(index, segment)">{{ segment.segment_title }}</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-lg-2">
+            <a class="btn btn-sm add-btn d-inline-block" href="#" role="button" @click.prevent="showSegmentModal()"><i
+              class="fas fa-plus"></i>
+            Add segment
+          </a>
+        </div>
+      </div>
+    </div>
+      
+    
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="day1" role="tabpanel" aria-labelledby="home-tab">
+        <!-- {{ SelectedSegment }} -->
+        <div class="container-fluid">
+          <div class="content-block">
+            <div class="empty-data green">
+              <p>
+                You can add, edit, or delete the Segment and its subordinate details such as description, altitude, and
+                attractions, etc.
+              </p>
+            </div>
+            <div class="row align-content-center">
+
+              <div class="col-md-10">
+
+                <form>
+                  <div class="form-modified">
+                    <div class="form-group row">
+                      <div class="col-md-10 offset-md-2">
+                        <div class="empty-data blue my-0" v-if="!ItineraryList.length">
+                          <p>Please Add Segment</p>
+                        </div>
+                        <div class="error-list" v-if="errors.Segment">
+                          <ul class="error-msg">
+                            <li v-for="(error,x) in errors.Segment" :key="x">
+                              <div v-for="(err,i) in error" :key="i">
+                                <p> {{err}}</p>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">
+                        Segment title <span class="required">*</span></label>
+                      <div class="col-sm-10">
+
+                        <label v-if="!SelectedSegment.IsActive"
+                          class="readonly">{{SelectedSegment.SegmentTitle}}</label>
+                        <input v-if="SelectedSegment.IsActive" type="text" class="form-control"
+                          :class="{ 'error-input' : errors['segment_title'] }" id="inputPassword"
+                          placeholder="Enter segment title" v-model="SelectedSegment.SegmentTitle" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'segment_title'" />
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">
+                        Title <span class="required">*</span></label>
+                      <div class="col-sm-10">
+                        <label v-if="!SelectedSegment.IsActive" class="readonly">{{SelectedSegment.Title}}</label>
+                        <input v-if="SelectedSegment.IsActive" type="text" class="form-control"
+                          :class="{ 'error-input' : errors['title'] }" id="inputPassword" placeholder="Enter title"
+                          v-model="SelectedSegment.Title" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'title'" />
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">Description
+                      </label>
+
+                      <div class="col-sm-10">
+                        <label v-if="!SelectedSegment.IsActive" class="readonly">{{SelectedSegment.Description}}</label>
+                        <textarea v-if="SelectedSegment.IsActive" id="" placeholder="Enter description"
+                          v-model="SelectedSegment.Description"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">Duration <span class="required">*</span>
+                      </label>
+
+                      <div class="col-sm-4">
+                        <label v-if="!SelectedSegment.IsActive" class="readonly position-relative">
+                          {{SelectedSegment.MinDuration}}
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">min duration</span>
+                          </div>
+                        </label>
+                        <input v-if="SelectedSegment.IsActive" type="text" @keypress="preventNonNumericalInput($event)"
+                          oninput="validity.valid||(value='');" class="form-control"
+                          :class="{ 'error-input' : errors['min_duration'] }" id="inputPassword"
+                          placeholder="Min duration" v-model="SelectedSegment.MinDuration" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'min_duration'" />
+                      </div>
+
+                      <div class="col-sm-4">
+                        <label v-if="!SelectedSegment.IsActive" class="readonly position-relative">
+                          {{SelectedSegment.MaxDuration}}
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">max duration</span>
+                          </div>
+                        </label>
+                        <input v-if="SelectedSegment.IsActive" type="text" @keypress="preventNonNumericalInput($event)"
+                          oninput="validity.valid||(value='');" class="form-control"
+                          :class="{ 'error-input' : errors['max_duration'] }" id="inputPassword"
+                          placeholder="Max duration" v-model="SelectedSegment.MaxDuration" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_duration'" />
+                      </div>
+                      <div class="col-sm-2">
+                        <label v-if="!SelectedSegment.IsActive" class="readonly position-relative">
+                          <span
+                            v-if="SelectedSegment.Unit"></span>{{SelectedSegment.Unit ? SelectedSegment.Unit.name : ''}}
+
+                        </label>
+                        <div class="multiselect-input no-sideinfo" v-if="SelectedSegment.IsActive">
+                          <multiselect :options="UnitList" :class="{ 'error-input' : errors['duration_unit'] }"
+                            v-model="SelectedSegment.Unit" label="name" :track-by="'name'" placeholder="Choose Unit">
+                          </multiselect>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors"
+                            :field="'duration_unit'" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Altitude</label>
+                      <div class="col-sm-5">
+
+                        <label class="readonly position-relative" v-if="!SelectedSegment.IsActive">
+                          {{SelectedSegment.AltitudeInMeter}}
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">altitude</span>
+                          </div>
+                        </label>
+
+                        <div class="input-group" v-if="SelectedSegment.IsActive">
+                          <input type="text" @keypress="preventNonNumericalInput($event)"
+                            oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                            placeholder="Altitude in meter" v-model="SelectedSegment.AltitudeInMeter"
+                            @keyup="ConvertToFeet" />
+                          <div class="input-group-append">
+                            <span id="basic-addon1" class="input-group-text">meter</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-5">
+
+                        <label class="readonly position-relative" v-if="!SelectedSegment.IsActive">
+                          {{SelectedSegment.AltitudeInFeet}}
+                          <div class="input-group-append">
+                            <span id="basic-addon1" class="input-group-text">feet</span>
+                          </div>
+                        </label>
+
+                        <div class="input-group" v-if="SelectedSegment.IsActive">
+                          <input type="text" @keypress="preventNonNumericalInput($event)"
+                            oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                            placeholder="Altitude in feet" v-model="SelectedSegment.AltitudeInFeet"
+                            @keyup="ConvertToMeter" />
+                          <div class="input-group-append">
+                            <span id="basic-addon1" class="input-group-text">in feet</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row" v-if="ItineraryList.length">
+                      <div class="col-md-10 offset-lg-2">
+                        <button type="submit" class="btn default-btn save-btn" v-if="SelectedSegment.IsActive == true"
+                          @click.prevent="editSelectedSegment(SelectedSegment)">
+                          Save
+                        </button>
+                        <button type="submit" class="btn default-btn cancel" v-if="SelectedSegment.IsActive == true"
+                          @click="cancelSelectedSegment(SelectedSegment)">
+                          Cancel
+                        </button>
+
+                        <button type="submit" :class="!ItineraryList ? 'disable-btn' : '' " class="btn default-btn"
+                          v-if="!SelectedSegment.IsActive" @click.prevent="changeSaveStatus(SelectedSegment)">
+                          Edit
+                        </button>
+
+                        <hr>
+                      </div>
+
+
+                    </div>
+
+
+                    <div class="form-group row" v-if="ItineraryList.length">
+                      <label for="inputPassword" class="col-sm-2 col-form-label">Add image*</label>
+
+                      <div class="col-lg-10">
+                        <a class="btn btn-sm add-btn d-inline-block" href="#" data-toggle="modal"
+                          data-target="#browseImage" @click.prevent="onUploadFile('image', SelectedSegment )">
+                          Browse
+                        </a>
+                        <UploadFile v-if="shouldfileupload" :shouldfileupload="shouldfileupload"
+                          @documentUploaded="documentUploaded" @closeUploadModal="closeUploadModal" :titles="titles"
+                          :limitdata="limitdata" :postdata="postdata" :checkTitle="checkTitle"></UploadFile>
+                      </div>
+                    </div>
+                    <div class="form-group-row">
+                      <div class="col-lg-10 offset-2 px-0">
+                        <div class="empty-data blue" v-if="ItineraryList.length">
+                          <p v-if="!ImageList.length" class="mb-0">
+                            No Image List
+                          </p>
+                        </div>
+                        <div class="image-wrapper">
+
+
+                          <div class="image-list" v-for="(image, e) in ImageList" :key="e">
+                            <div class="overlay"></div>
+                            <img :src="image.image_path" alt="" />
+                            <div class="image-list-detail">
+                              <div class="banner-icon" v-if="image.is_default">
+                                <i class="fas fa-check"></i>
+                              </div>
+
+                              <h5>{{ image.title }}</h5>
+                              <!-- <h5>{{ image.file_path.split("/").pop(-1) }}</h5> -->
+                              <p class="mb-0">{{ (image.size/(1024*1024)).toFixed(2) }} MB</p>
+                              <p class="text-muted" v-if="image.is_default">(This image is selected as banner image.)
+                              </p>
+                            </div>
+                            <div class="includes-action floating">
+                              <button
+                                v-tooltip.top="{ content: 'Set Itinerary Banner Image', class: 'tooltip-custom tooltip-other-custom' }"
+                                type="button" class="btn btn-success rounded-btn"
+                                @click.prevent="setBannerImage(e, image)">
+                                <i class="fas fa-image"></i>
+                              </button>
+
+                              <button type="button" class="btn red" data-toggle="modal" data-target="#deleteImage"
+                                @click.prevent="selectedDelete(e, image)">
+                                <i class="fas fa-trash-alt"></i>
+                              </button>
+                            </div>
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group row" v-if="ItineraryList.length">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">
+                        Attractions</label>
+                      <div class="col-sm-10">
+                        <button type="button" class="btn add-btn" @click.prevent="attractionModal()">
+                          <i class="fas fa-plus"></i> Add attractions
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="form-group row">
+                      <div class="col-sm-10 offset-2">
+                        <div class="empty-data blue" v-if="ItineraryList.length">
+                          <p v-if="!AttractionList.length" class="mb-0">
+                            No Attraction List
+                          </p>
+                        </div>
+                        <div class="attraction-wrapper">
+
+
+                          <div class="attraction-desc" v-for="(attraction, i) in AttractionList" :key="i">
+                            <div class="custom-upload">
+                              <input @click="onUploadFileAttraction('image',i,attraction )">
+
+                            </div>
+                            <div class="attraction-img-wrapper">
+                              <img v-if="!attraction.image" src="https://dummyimage.com/600x400/424242/ffffff&text=Upload+image
+   https://dummyimage.com/600x400/424242/ffffff&amp;text=Upload+image
+   " alt="">
+                              <img v-if="AttractionList[i].image" :src="attraction.image.image_path" alt="">
+                            </div>
+
+                            <div class="attraction-info">
+                              <div v-if="attraction.image" class="delete-attractionimg">
+                                <a href="#" @click.prevent="deleteSelectedAttractionImage(i, attraction)">
+                                  <i class="fas fa-times text-white"></i>
+                                </a>
+                              </div>
+                              <h5> {{ attraction.title }}</h5>
+                              <p>{{ attraction.description }}</p>
+                              <p>{{ attraction.other_info }}</p>
+                            </div>
+
+
+                            <div class="includes-action floating">
+                              <button v-if="!attraction.IsActive" type="button" class="btn"
+                                @click.prevent="editAttraction(i, attraction)">
+                                <i class="fas fa-pen"></i>
+                              </button>
+                              <!-- <button
+                                  v-if="attraction.IsActive == true"
+                                  type="button"
+                                  class="btn green"
+                                  @click="saveSelectedAttraction(i, attraction)"
+                                >
+                                  <i class="fas fa-save"></i>
+                                </button>
+                                <button
+                                  v-if="attraction.IsActive"
+                                  type="button"
+                                  class="btn red"
+                                  @click="cancelSelectedAttraction(i, attraction)"
+                                >
+                                  <i class="fas fa-times"></i>
+                                </button> -->
+                              <button type="button" class="btn red" data-toggle="modal"
+                                @click.prevent="deleteSelected(i, attraction)">
+                                <i class="fas fa-trash-alt"></i>
+                              </button>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="col-md-2">
+               
+                <div v-if="ItineraryList.length">
+                  <a class="btn btn-sm add-btn delete dlt-segment" role="button" @click.prevent="deleteSegment()"><i
+                      class="fas fa-trash-alt"></i>
+                    Delete segment
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="day2" role="tabpanel" aria-labelledby="profile-tab">
+        ...
+      </div>
+      <div class="tab-pane fade" id="day3" role="tabpanel" aria-labelledby="contact-tab">
+        ...
+      </div>
+    </div>
+  </div>
+  <!-- Add segment -->
+  <div class="modal-wrap">
+    <div class="modal fade" id="addSegment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add segment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="error-list" v-if="ErrorsSegment">
+            <ul class="error-msg">
+              <li v-for="(error,x) in ErrorsSegment" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-body">
+            <div class="form-modified">
+              <form action="">
+                <div class="form-group">
+                  <input type="text" class="form-control" :class="{ 'error-input' : errors['add_segment_title'] }"
+                    id="inputPassword" placeholder="Add segment" v-model="AddTrekSegmentTitle"
+                    @keyup.enter.prevent="addTrekSegment()" />
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'add_segment_title'" />
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" :disabled="ButtonStatus" class="btn default-btn" @click.prevent="addTrekSegment()">
+              Add
+              <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+            </button>
+            <button type="button" class="btn default-btn cancel"
+              @click.prevent="hideModalSegmentClose()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-wrap">
+    <div class="modal fade show" id="deleteSelectedAttraction" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalLabel" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Attraction</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+
+          <div class="error-list" v-if="errors">
+            <ul class="error-msg">
+              <li v-for="(error,x) in errors" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+
+          <div class="modal-body">
+            <p>Are you sure you want to delete this ?</p>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn default-btn" @click.prevent="deleteAttraction()">Ok</button>
+            <button type="button" class="btn default-btn cancel" aria-label="Close"
+              @click.prevent="cancelDeleteAttraction">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Add segment ends -->
+  <!-- Add attraction modal -->
+  <!-- Modal -->
+  <div class="modal-wrap">
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add attractions</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="error-list" v-if="errorsAttraction">
+            <ul class="error-msg">
+              <li v-for="(error,x) in errorsAttraction" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <div class="form-modified">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="inputPassword" placeholder="Attraction title"
+                    v-model="Attraction.Title" :class="{ 'error-input' : errors['attraction_title'] }" />
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'attraction_title'" />
+
+                </div>
+
+                <div class="form-group">
+                  <textarea id="" placeholder="Enter description" v-model="Attraction.Description"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <div class="multiselect-input" v-if="AttractionTypeList">
+                    <multiselect :options='AttractionTypeList' label="name" :track-by="'name'"
+                      placeholder="Choose Attraction Type.." v-model="Attraction.Icon"
+                      :class="{ 'error-input' : errors['attraction_type_id'] }"></multiselect>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors"
+                      :field="'attraction_type_id'" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <input type="text" class="form-control" id="inputPassword" placeholder="Any links if availabel*"
+                    v-model="Attraction.Link" :class="{ 'error-input' : errors['attraction_link'] }"/>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'attraction_link'" />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn default-btn" @click.prevent="AddSelectedAttraction()">
+              Add
+              <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+            </button>
+            <button type="button" class="btn default-btn cancel" @click.prevent="hideattractionModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Edit attraction modal -->
+
+  <div class="modal-wrap">
+    <div class="modal fade" id="editAttractionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit attractions</h5>
+            <button type="button" class="close" @click.prevent="hideAttractionSegment()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="error-list" v-if="errorsSegmentEdit">
+            <ul class="error-msg">
+              <li v-for="(error,x) in errorsSegmentEdit" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-body">
+            <form action="">
+              <div class="form-modified">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="inputPassword" placeholder="Attraction title"
+                    v-model="EditAttractionList.Title" :class="{ 'error-input' : errors['edit_attraction_title'] }" />
+                  <validation-error v-if="isError" :isError="isError" :errors="errors"
+                    :field="'edit_attraction_title'" />
+
+                </div>
+
+                <div class="form-group">
+                  <textarea id="" placeholder="Enter description..."
+                    v-model="EditAttractionList.Description"></textarea>
+                </div>
+
+                <div class="form-group">
+                  <div class="multiselect-input" v-if="AttractionTypeList">
+                    <multiselect :options='AttractionTypeList' label="name" :track-by="'name'"
+                      placeholder="Choose Attraction Type.." v-model="EditAttractionList.AttractionType"
+                      :class="{ 'error-input' : errors['edit_attraction_type_id'] }"></multiselect>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_attraction_type_id'" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <input type="text" class="form-control" id="inputPassword" placeholder="Any links if availabel*"
+                    v-model="EditAttractionList.Link" :class="{ 'error-input' : errors['edit_attraction_link'] }" />
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_attraction_link'" />
+
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn default-btn" @click.prevent="SaveEditedAttraction()">
+              Save
+            </button>
+            <button type="button" class="btn default-btn cancel"
+              @click.prevent="hideAttractionSegment()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- delete modals -->
+  <div class="modal-wrap">
+    <div class="modal fade show" id="deleteSelectedSegment" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalLabel" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Segment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="error-list" v-if="errorsDelete">
+            <ul class="error-msg">
+              <li v-for="(error,x) in errorsDelete" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-body" v-if="!DeleteStatus">
+            <p>Are you sure you want to delete {{SelectedSegment.SegmentTitle}}.</p>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" v-if="DeleteStatus" class="btn default-btn"
+              @click.prevent="cancelModalSegment()">ok</button>
+            <button type="button" v-if="!DeleteStatus" class="btn default-btn"
+              @click.prevent="deleteTrekSegment()">Yes</button>
+            <button type="button" v-if="!DeleteStatus" class="btn default-btn cancel" aria-label="Close"
+              @click.prevent="cancelModalSegment">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-wrap">
+    <div class="modal fade show" id="deleteImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Departure</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this ?</p>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn default-btn" data-dismiss="modal"
+              @click.prevent="deleteSelectedImage()">Ok</button>
+            <button type="button" class="btn default-btn cancel" data-dismiss="modal" aria-label="Close">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

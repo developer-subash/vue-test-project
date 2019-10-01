@@ -1,0 +1,354 @@
+<div>
+  <div class="breadcrumb-block">
+    <FlashMessage></FlashMessage>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Profile</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="white-box">
+    <div class="table-title">
+        <h5>Create profile</h5>
+    </div>
+      
+    <div class="tabs-block">
+      <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-bars"></i> About</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false"><i class="far fa-address-book"></i> Social accounts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false"><i class="fas fa-phone"></i> Contacts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="img-tab" data-toggle="tab" href="#img" role="tab" aria-controls="contact" aria-selected="false"><i class="fas fa-image"></i> Banner image</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="office-tab" data-toggle="tab" href="#officetime" role="tab" aria-controls="contact" aria-selected="false"><i class="far fa-calendar-alt"></i> Office days</a>
+        </li>
+      </ul>
+    </div>
+  
+  
+  
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <div class="container-fluid">
+          <div class="content-block">
+              <div class="form-modified">
+                  <div class="form-group row">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">
+                        Name</label>
+                      <div class="col-sm-10">
+                          <input type="text" id="inputPassword" placeholder="Name of organisation" class="form-control">
+                      </div>
+                    </div>
+                <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label">
+                    About</label>
+                  <div class="col-sm-10">
+                    <textarea name="" id="" placeholder="eg. Description" class=""></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10 offset-md-2">
+                    <button type="submit" class="btn default-btn save-btn">
+                        Save
+                    </button>
+                    <button type="submit" class="btn default-btn cancel">
+                        Cancel
+                      </button>
+                </div>
+              </div>
+      </div>
+      
+    </div>
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+     
+      <div class="container-fluid">
+          <div class="content-block">
+              <div class="form-modified">
+                  <div class="form-group row">
+                      <label for="staticEmail" class="col-sm-2 col-form-label">
+                          Select social media
+                      </label>
+                      <div class="col-sm-3">
+                          <div class="multiselect-input">
+                              <multiselect :options='RequestBasePriceList' label="name" :track-by="'id'"
+                                  v-model="RequestBasePrice" placeholder="Choose social"
+                                  @input="CallPackagesList()">
+                              </multiselect>
+                          </div>
+                      </div>
+                      <div class="col-lg-5">
+                        <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Enter link">
+                        </div>
+                      </div>
+                      <div class="col-sm-2">
+                          <a href="#" role="button" class="btn btn-sm add-btn">
+                              Save 
+                          </a>
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                      <div class="col-lg-8 offset-lg-2">
+                        <div class="includes-list-item">
+                          <div class="includes-list hoverable-list readonly">
+                              <span class="social-float-icons">
+                                <i class="fab fa-facebook-f"></i>
+                              </span>
+                              You can add, edit, or delete the details that are inclusive on the price or package.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="lg-2">
+                          <div class="includes-action"><button type="button" class="btn blue"><i class="fas fa-pen"></i></button> <button type="button" class="btn red"><i class="fas fa-minus"></i></button></div>
+                      </div>
+                  </div>
+                </div>
+            </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="container-fluid">
+        <div class="content-block">
+          <div class="form-modified">
+              <div class="form-group row">
+                  <label for="staticEmail" class="col-sm-2 col-form-label">
+                      Select contact number type
+                  </label>
+                
+                  <div class="col-sm-8">
+                      <input type="text" id="inputPassword" placeholder="Enter contact number" class="form-control">
+                  </div>
+                  <div class="col-sm-2">
+                      <a href="#" role="button" class="btn btn-sm add-btn">
+                          Save 
+                      </a>
+                  </div>
+              </div>
+              <hr>
+              <div class="form-group row">
+                  <div class="col-lg-8 offset-lg-2">
+                      <div class="hoverable-list readonly">
+                          +977 98383008
+                      </div>
+                  </div>
+                  <div class="lg-2">
+                      <div class="includes-action"><button type="button" class="btn blue"><i class="fas fa-pen"></i></button> <button type="button" class="btn red"><i class="fas fa-minus"></i></button></div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="img" role="tabpanel" aria-labelledby="contact-tab">
+      <div class="container-fluid">
+        <div class="content-block">
+          <div class="row align-content-center">
+           
+            <div class="col-lg-10">
+              <div class="empty-data green my-0">
+                <p>
+                    You can browse, add, or edit the images for the gallery of the package.
+                </p>
+              </div>
+            </div>
+            <!-- <div v-if="navigator.onLine">
+              <p>It looks like you're online!</p>
+            </div> -->
+            <!-- <p>{{internetConnectivitystatus}}</p> -->
+            <div class="col-md-2">
+              <a
+                class="btn btn-sm add-btn"
+                href="#"
+                data-toggle="modal"
+               
+                ><i class="fas fa-plus"></i>
+                Browse
+              </a>
+              <UploadFile
+                v-if="shouldfileupload"
+                :shouldfileupload="shouldfileupload"
+                @documentUploaded="documentUploaded"
+                @closeUploadModal="closeUploadModal"
+                :titles="titles"
+                :limitdata="limitdata"
+                :postdata="postdata"
+                :checkTitle="checkTitle"
+              ></UploadFile>
+            </div>
+        </div>
+            
+        <div class="content-block">
+            <div class="row">
+             
+            </div>
+          </div>
+            <!-- Delete Modal -->
+            <div class="modal-wrap">
+              <div
+                class="modal fade show"
+                id="deleteTrekImage"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalLabel"
+              >
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Delete Image</h5>
+                      <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                      >
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <div class="error-list" v-if="errors">
+                        <ul class="error-msg" >
+                            <li v-for="(error,x) in errors" :key="x">
+                              {{ error }}
+                            </li>
+                          </ul>
+                    </div>
+                    <div class="modal-body">
+                      <p>
+                        Are you sure you want to delete this ?
+                      </p>
+                    </div>
+    
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        class="btn default-btn"
+                        @click="deleteImage()"
+                      >
+                        Ok
+                      </button>
+                      <button
+                        type="button"
+                        class="btn default-btn cancel"
+                        @click.prevent="hidedeleteModal"
+                        aria-label="Close"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="officetime" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="container-fluid">
+              <div class="content-block">
+                  <div class="form-modified">
+                      <label for="Package title" class="col pl-0">Select days</label>
+                      <div class="checkbox-block my-3">
+                          <div class="row">
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Sunday</label>
+                            </div> 
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Monday</label>
+                            </div> 
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Tuesday</label>
+                            </div> 
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Wednesday</label>
+                            </div> 
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Thursday</label>
+                            </div> 
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Friday</label>
+                            </div> 
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"> 
+                                <label for="exampleCheck1" class="form-check-label pl-4">Saturday</label>
+                            </div> 
+                          </div>
+                      </div>
+                      <hr>
+                      <div class="row align align-items-center">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Sunday</p> 
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="test"
+                                :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                               <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'start_time'" />
+                          </div>     
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="test"
+                                :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                               <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'start_time'" />
+                          </div>     
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button
+                                 
+                                  type="button"
+                                  class="btn blue"
+                                  @click.prevent="editIncludes(index, list)"
+                                >
+                                  <i class="fas fa-pen"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  class="btn red"
+                                  @click.prevent="selectedDelete(index, list)"
+                                    
+                                >
+                                  <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                              </div>
+                        </div>
+                      </div>
+                      
+                     
+                  
+                   </div>
+              </div>
+            </div>
+    </div>
+      </div>
+  </div>
+</div>
+</div>

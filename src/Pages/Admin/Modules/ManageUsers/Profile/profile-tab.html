@@ -1,0 +1,48 @@
+<div>
+    <div class="breadcrumb-block">
+        <FlashMessage></FlashMessage>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Profile</li>
+            </ol>
+        </nav>
+    </div>
+    <div class="white-box">
+        <div class="table-title">
+            <h5>Create profile</h5>
+        </div>
+    
+        <div class="tabs-block">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" @click="redirectToAbout">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home"
+                        aria-selected="true"><i class="fas fa-bars"></i> About</a>
+                </li>
+                <li class="nav-item" @click="redirectToSocialAccount">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                        aria-controls="profile" aria-selected="false"><i class="far fa-address-book"></i> Social
+                        accounts</a>
+                </li>
+                <li class="nav-item" @click="redirectToContact">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab"
+                        aria-controls="contact" aria-selected="false"><i class="fas fa-phone"></i> Contacts</a>
+                </li>
+                <li class="nav-item" @click="redirectToBanner">
+                    <a class="nav-link" id="img-tab" data-toggle="tab" href="#img" role="tab" aria-controls="contact"
+                        aria-selected="false"><i class="fas fa-image"></i> Banner image</a>
+                </li>
+                <li class="nav-item" @click="redirectToOffice">
+                    <a class="nav-link" id="office-tab" data-toggle="tab" href="#officetime" role="tab"
+                        aria-controls="contact" aria-selected="false"><i class="far fa-calendar-alt"></i> Office days</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content" id="myTabContent">
+            <router-view></router-view>
+        </div>
+        <!-- <router-view></router-view> -->
+    </div>
+</div>

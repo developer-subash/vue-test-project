@@ -1,0 +1,58 @@
+<div class="tab-pane fade" id="day3" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="container-fluid">
+            <div class="content-block">
+                    <FlashMessage></FlashMessage>
+                <form>
+                    <div class="form-modified">
+                            <div class="empty-data green">
+                                    <p>
+                                            You can review the cancellation and other important information.
+                                    </p>
+                            </div>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Cancelation
+                                information</label>
+                            <div class="col-sm-10">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{NotesData.CancellationInfo}}</label>
+                                <textarea name="" v-if="ButtonStatus"  id="" placeholder="Write cancelation information" v-model="NotesData.CancellationInfo" :class="{ 'error-input' : errors['CancellationInfo'] }"></textarea>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'CancellationInfo'" />
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Extra
+                                    information</label>
+                            <div class="col-sm-10">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{NotesData.ExtraInfo}}</label>
+                                <textarea name="" v-if="ButtonStatus"  id="" placeholder="Write extra information" v-model="NotesData.ExtraInfo" :class="{ 'error-input' : errors['ExtraInfo'] }"></textarea>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'ExtraInfo'" />
+                            </div>
+                        </div>
+
+                        <div class="content-block">
+                            <div class="row">
+                                <div class="col-md-10 offset-md-2">
+                                        <button v-if="!ButtonStatus" class="btn default-btn" type="submit" @click.prevent="editPricingRule">
+                                                Edit
+                                              </button>
+                                    <button  v-if="ButtonStatus" class="btn default-btn save-btn" type="submit" @click.prevent="createNotes">{{buttonName}}
+                                            <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                                    </button>
+                                    <button  v-if="ButtonStatus" class="btn default-btn cancel" type="submit" @click.prevent="cancelPricingRule">
+                                        Cancel
+                                      </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </form>
+            </div>
+        </div>
+    </div>

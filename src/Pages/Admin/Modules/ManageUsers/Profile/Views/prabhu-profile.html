@@ -1,0 +1,240 @@
+    <div class="profile-box">
+    <div class="manage-package-block">
+      <div class="white-box">
+        <div class="table-title pb-0">
+          <h5><i class="fa fa-user"></i> My Profile</h5>
+        </div>
+        <hr />
+        <div class="manage-user-block">
+          <div class="form-modified">
+            <form action="">
+              <div class="profile-bg">
+                <img :src="TempCompanyData.banner_path" alt="">
+                <button class="btn browse-btn" @click.prevent="onUploadFileBanner('image')">Browse banner image</button>
+                <UploadFile v-if="shouldfileupload" :shouldfileupload="shouldfileupload"
+                    @documentUploaded="documentUploaded" @closeUploadModal="closeUploadModal" :titles="titles"
+                    :limitdata="limitdata" :postdata="postdata"></UploadFile>
+                
+              </div>
+              <div class="profile-fields">
+
+                <div class="user-image" v-if="activeUser.accounts" v-for="(account, index) in activeUser.accounts"
+                  :key="'account'+index">
+                  <!-- <p>{{account}}</p> -->
+                  <img v-if="account.logo_path" :src="account.logo_path" alt="" />
+                  <img v-else src="img/user.jpg" alt="" />
+                </div>
+                <!-- <div class="user-image"><img src="img/user.jpg" alt="" /></div> -->
+                <div class="profile-btns">
+                  <div class="custom-file change-photo">
+                    <input type="file" class="custom-file-input" id="customFile" />
+                    <label class="custom-file-label" for="customFile" @click.prevent="onUploadFileLogo('image')">Change
+                      company logo</label>
+                    <UploadFile v-if="shouldfileupload" :shouldfileupload="shouldfileupload"
+                      @documentUploaded="documentUploaded" @closeUploadModal="closeUploadModal" :titles="titles"
+                      :limitdata="limitdata" :postdata="postdata" :checkTitle="checkTitle"></UploadFile>
+                  </div>
+                  <!-- {{TempCompanyData.banner_path}} -->
+
+
+                </div>
+                <!-- {{activeUser.accounts}} -->
+
+                <div class="user-description">
+                  <div class="card-content-member">
+                    <!-- <div class="img-wrap">
+                          <img src="https://dummyimage.com/100x100/ddd/333" alt="">
+                        </div> -->
+                    <!-- <div class="custom-file change-photo right"><input type="file" id="customFile" class="custom-file-input"> <label for="customFile" class="custom-file-label">Change profile picture </label></div> -->
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <!-- {{activeUser}} -->
+                        <h6>{{activeUser.full_name}}</h6>
+                        <hr>
+                        <p>
+                          <a href="mailto:mark.andre@gmail.com"><i class="fa fa-envelope"></i>
+                            {{activeUser.email}}</a>
+                            <!-- {{activeUser}}</a> -->
+                        </p>
+                        <!-- <p>
+                          <i class="fa fa-map-marker-alt"></i> 16015 Northpark
+                          Drive, Urbandale, Iowa, United states
+                        </p> -->
+                      </div>
+
+                      <div class="col-lg-6" v-for="(account, index) in activeUser.accounts" :key="index">
+                        <h6>Company information</h6>
+                        <hr>
+                        <p>
+                          <a href="mailto:mark.andre@gmail.com"><i class="fa fa-envelope"></i>
+                            {{account.company_email}}</a>
+                        </p>
+                        <p v-if="account.company_contact_person">
+                          {{account.company_contact_person}}</a>
+                        </p>
+                        <p v-if="account.company_contact1">
+                          <a href="tel:+876656754654433"><i class="fa fa-phone"></i> {{account.company_contact1}}</a>
+                        </p>
+                        <p v-if="account.company_contact2">
+                          <a href="tel:+876656754654433"><i class="fa fa-phone"></i> {{account.company_contact2}}</a>
+                        </p>
+                        <p
+                          v-if="account.company_address_line1 && account.company_city && account.company_country && account.company_zip">
+                          <i class="fa fa-map-marker-alt"></i>
+                          {{account.company_address_line1}}, {{account.company_city}}, {{account.company_country}},
+                          {{account.company_zip}}
+                        </p>
+                        <p
+                          v-if="account.company_address_line2 &&  account.company_city && account.company_country && account.company_zip">
+                          <i class="fa fa-map-marker-alt"></i>
+                          {{account.company_address_line2}}, {{account.company_city}}, {{account.company_country}},
+                          {{account.company_zip}}
+                        </p>
+                        <!-- {{activeUser}} -->
+                        <p v-if="activeUser.created_at"><i class="fa fa-clock"></i> Member since {{activeUser.created_at}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-title p-0">
+                  <h5><i class="fa fa-user-cog" @click.prevent="showEditData"></i> Edit Profile</h5>
+                </div>
+                <div v-if="showEditField">
+                  <div class="error-list" v-if="errorsMessage">
+                    <ul class="error-msg">
+                      <li v-for="(error,x) in errorsMessage" :key="x">
+                        <div v-for="(err,i) in error" :key="i">
+                          <p> {{err}}</p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword"
+                          :class="{ 'error-input' : errors['first_name'] }" placeholder="First Name"
+                          v-model="Edit.FirstName" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'first_name'" />
+                        <!-- <div class="empty-data">
+                         <p>This field is required</p>
+                       </div> -->
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword"
+                          :class="{ 'error-input' : errors['last_name'] }" placeholder="Last Name"
+                          v-model="Edit.LastName" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'last_name'" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword"
+                          :class="{ 'error-input' : errors['company_name'] }" placeholder="Company Name"
+                          v-model="Edit.CompanyName" />
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'company_name'" />
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword" placeholder="Company Address Line 1"
+                          v-model="Edit.CompanyAddressLine1" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword" placeholder="Company Address Line 2"
+                          v-model="Edit.CompanyAddressLine2" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword" placeholder="Company City"
+                          v-model="Edit.CompanyCity" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword" placeholder="Company Country"
+                          v-model="Edit.CompanyCountry" :class="{ 'error-input' : errors['country_name'] }"/>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'country_name'" />
+
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="inputPassword" placeholder="Company Zip"
+                          v-model="Edit.CompanyZip" :class="{ 'error-input' : errors['country_zip'] }"/>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'country_zip'" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="contact1" placeholder="Company Contact 1"
+                          v-model="Edit.CompanyContact1" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="contact2" placeholder="Company Contact 2"
+                          v-model="Edit.CompanyContact2" />
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="text" placeholder="Company Contact Person"
+                          v-model="Edit.CompanyContactPerson" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="inputPassword" placeholder="Personal Phone 1"
+                          v-model="Edit.CompanyPerson1" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="inputPassword" placeholder="Personal Phone 2"
+                          v-model="Edit.CompanyPerson2" />
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="inputPassword" placeholder="Personal Email"
+                          v-model="Edit.CompanyPersonEmail" :class="{ 'error-input' : errors['email'] }"/>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'email'" />
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="form-group">
+                    <button type="submit" class="deault-btn" @click.prevent="updateProfile">
+                      Save
+                      <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                    </button>
+                    <button type="submit" class="deault-btn" @click.prevent="cancelEdit">
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

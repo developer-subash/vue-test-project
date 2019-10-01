@@ -1,0 +1,7 @@
+<div class="error-msg">
+
+    <p v-if="hasMessageTitle"> <span v-if="errors[field] === 'error'">There is Problem Fix them First</span></p>
+
+    <small id="emailHelp" class="form-text text-danger" v-if="errors[field]">
+        {{errors[field][index]}}</small>
+</div>

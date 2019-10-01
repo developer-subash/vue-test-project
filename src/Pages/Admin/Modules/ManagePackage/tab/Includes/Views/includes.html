@@ -1,0 +1,323 @@
+<div
+  class="tab-pane tab-content fade"
+  id="inlcudes"
+  role="tabpanel"
+  aria-labelledby="inlcudes-tab"
+>
+<FlashMessage></FlashMessage>
+  <div class="container-fluid">
+    <div class="error-list" v-if="errorsMessage">
+                        <ul class="error-msg" >
+                            <li v-for="(error,x) in errorsMessage" :key="x">
+                              <div v-for="(err,i) in error" :key="i">
+                                <p> {{err}}</p>
+                              </div>                            
+                            </li>
+                          </ul>
+                    </div>
+    <div class="content-block">
+        <form>
+            <div class="form-modified">
+               
+                  <div class="row">
+                    <div class="col-lg-8 offset-2">
+                        <div class="empty-data green">
+                            <p>
+                                You can add, edit, or delete the details that are inclusive on the price or package.
+                            </p>
+                          </div>
+                      <div v-if="!AddDestinationStatus" class="mb-3">
+                          <a href="" @click.prevent="showAddDestination()" class="btn default-btn"><i class="fas fa-plus"></i> Add new include</a>
+                      </div>
+                    </div>
+                  </div>
+               
+              <div class="form-group row" v-if="AddDestinationStatus">
+                <label for="staticEmail" class="col-sm-2 col-form-label">
+                  Includes</label
+                >
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <textarea
+                      name=""
+                      id=""
+                      :class="{ 'error-input' : errors['title'] }"
+                      placeholder="eg. Include Here."
+                      v-model="IncludesData.title"
+                    ></textarea>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'title'" />
+                  </div>
+
+                  <div class="form-group">
+                    <div class="multiselect-input" v-if="getAllTourTypeList">
+                      <multiselect
+                        :options="getAllTourTypeList"
+                        :class="{ 'error-input' : errors['icon_id'] }"
+                        v-model="IncludesData.IconId"
+                        label="name"
+                        :track-by="'name'"
+                        :custom-label="customLabel"
+                        :show-labels="false"
+                        placeholder="Choose icon"
+                        :option-height="40"
+                      >
+                      <template slot="singleLabel" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky"><span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span></template>
+                      <template slot="option" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky">
+                        <div class="option__desc"><span class="option__title">{{ props.option.name }}</span></div>
+                      </template>
+                    </multiselect>
+                      <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'icon_id'" />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-2">
+                    <a
+                    class="btn btn-sm add-btn"
+                    href="#"
+                    role="button"
+                    @click.prevent="addIncludes"
+                  >
+                    Save includes
+                    <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                  </a>
+                </div>
+                
+              </div>
+              <div class="form-group row" v-for="(list, index) in IncludesList"
+              :key="index">
+                <div class="col-lg-8 offset-lg-2">
+                  <div class="empty-data">
+                    <p v-if="IncludesList.length == 0">
+                      No includes List
+                    </p>
+                  </div>
+                  
+                  
+                    <div
+                      class="includes-list-item"
+                    >
+                    <div v-if="!list.IsActive" class="includes-list hoverable-list readonly">
+                        <!-- <label class="readonly"><span v-if="list.icon">{{list.icon.name}}</span></label> -->
+                        <div class="list-ico">
+                          <img v-if="list.icon" :src="list.icon.icon_path">
+                        </div>
+                        <div class="includes-description">
+                           <p>{{ list.title }}</p>
+                        </div>
+                      
+                        <div class="up-down">
+                            <button class="btn arrange-btn" v-if="index != 0" @click.prevent="moveIncludetUp(index, list)"><i class="fas fa-level-up-alt"></i></button>
+                            <button class="btn arrange-btn" v-if="index !== IncludesList.length -1" @click.prevent="moveIncludeDown(index, list)"><i class="fas fa-level-down-alt"></i></button>
+                        </div> 
+                       
+                      <!-- delete modals -->
+                    
+                    </div>
+
+                    <div v-if="list.IsActive" class="includes-list editable">
+                      <div class="row">
+                          <div class="col-lg-10">
+                            <div class="form-group">
+                              <textarea
+                                name=""
+                                id=""
+                                :class="{ 'error-input' : errors['edit_title'] }"
+                                placeholder="eg. Include Here."
+                                v-model="EditIncludes.title"
+                              ></textarea>
+                              <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_title'" />
+                            </div>
+          
+                            <div class="form-group">
+                              <div class="multiselect-input" v-if="getAllTourTypeList">
+                                <multiselect
+                                  :options="getAllTourTypeList"
+                                  :class="{ 'error-input' : errors['edit_icon_id'] }"
+                                  v-model="EditIncludes.icon_id"
+                                  label="name"
+                                  :track-by="'name'"
+                                  :custom-label="customLabel"
+                                  :show-labels="false"
+                                  placeholder="Choose icon"
+                                  :option-height="40">
+                                <template slot="singleLabel" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky"><span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span></template>
+                                <template slot="option" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky">
+                                  <div class="option__desc"><span class="option__title">{{ props.option.name }}</span></div>
+                                </template></multiselect>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_icon_id'" />
+                              </div>
+                            </div>
+                          </div>
+  
+                        <div class="col-lg-2">
+                            <div class="includes-action justify-content-start">
+                                <button v-if="list.IsActive" type="button" class="btn green" @click.prevent="saveIncludes()"><i class="fas fa-save"></i></button>
+                                <button v-if="list.IsActive" type="button" class="btn red" @click.prevent="cancelIncludes(index, list)"><i class="fas fa-times"></i></button>
+                              </div>
+                        </div>
+                      </div>
+                     
+  
+                     
+                    </div>
+                  </div>
+
+                  
+
+                
+                </div>
+                <div class="col-lg-2">
+                    <div class="includes-action">
+                        <button
+                          v-if="!list.IsActive"
+                          type="button"
+                          class="btn blue"
+                          @click.prevent="editIncludes(index, list)"
+                        >
+                          <i class="fas fa-pen"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn red"
+                          @click.prevent="selectedDelete(index, list)"
+                            
+                        >
+                          <i class="fas fa-minus"></i>
+                        </button>
+                      </div>
+                </div>
+              </div>
+            </div>
+          </form>
+      <!-- <div class="modal-wrap">
+        <div
+          class="modal fade"
+          id="addSegment"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div
+            class="modal-dialog modal-dialog-centered modal-lg"
+            role="document"
+          >
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Includes</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              
+              <div class="modal-body">
+                <div class="form-modified">
+                  <div class="form-group">
+                      <textarea
+                      name=""
+                      id=""
+                      placeholder="eg. Necessary paperworks and all government papers."
+                      v-model="EditIncludes.title"
+                    ></textarea>
+                  </div>
+                   
+                  <div class="form-group">
+                    <div class="multiselect-input" v-if="getAllTourTypeList">
+                      <multiselect
+                        :options="getAllTourTypeList"
+                        v-model="EditIncludes.icon_id"
+                        label="name"
+                        :track-by="'name'"
+                        placeholder="Choose Tour Type.."
+                      ></multiselect>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn default-btn"
+                  data-dismiss="modal"
+                  @click="saveIncludes()"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  class="btn default-btn cancel"
+                  data-dismiss="modal"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="modal-wrap">
+          <div
+          class="modal fade show"
+          id="deleteSelectedIncludes"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+        >
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Delete Include</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="error-list" v-if="errorsModal">
+                  <ul class="error-msg" >
+                      <li v-for="(error,x) in errorsModal" :key="x">
+                        {{ error }}
+                      </li>
+                  </ul>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Are you sure you want to delete this ?
+                </p>
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn default-btn"
+                  @click.prevent="deleteIncludes()"
+                >
+                  Ok
+                </button>
+                <button
+                  type="button"
+                  class="btn default-btn cancel"
+                  @click.prevent="hideDeleteModal"
+                  aria-label="Close"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</div>

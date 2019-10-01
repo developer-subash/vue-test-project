@@ -1,0 +1,257 @@
+<div
+  class="tab-pane fade show active"
+  id="day1"
+  role="tabpanel"
+  aria-labelledby="home-tab"
+>
+<FlashMessage></FlashMessage>
+<!-- <CreatePackage :GeneralData="GeneralData" ></CreatePackage> -->
+<!-- {{this.$store.state.General.GeneralTabBasic.title}} -->
+  <div class="container-fluid">
+    <div class="content-block">
+        <div class="error-list" v-if="errorsMessage">
+            <ul class="error-msg" >
+                <li v-for="(error,x) in errorsMessage" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                        <p> {{err}}</p>
+                      </div>
+                </li>
+              </ul>
+        </div>
+      <form>
+        <div class="form-modified">
+            <div class="empty-data green">
+                <p>
+                    You can add, edit, or delete the generic information of the package such as the title, destination, altitude, and difficulty, etc. 
+                  </p>
+              </div>
+          <div class="form-group row">
+            <label for="staticEmail" class="col-sm-2 col-form-label" 
+              >Enter Title <span class="required">*</span></label>
+            <div class="col-sm-10">
+                <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{GeneralData.Title}}</label>
+              <input
+                v-if="ButtonStatus"
+                type="text"
+                class="form-control"
+                :class="{ 'error-input' : errors['title'] }"
+                id="inputPassword"
+                v-model="GeneralData.Title"
+                placeholder="Destination name"
+              />
+              <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'title'" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Destination <span class="required">*</span></label
+            >
+            <div class="col-sm-10">
+              <label v-if="!ButtonStatus" for="staticEmail" class="readonly"><span v-if="GeneralData.Destination">{{GeneralData.Destination.name}}</span></label>
+              <div class="multiselect-input" v-if="DestinationMasterData">
+                 <multiselect
+                 v-if="ButtonStatus"
+                 :options='DestinationMasterData'
+                 v-model="GeneralData.Destination"
+                 label="name"
+                :track-by="'name'"
+                placeholder="Choose Tour Type.."
+                :class="{ 'error-input' : errors['destination_id'] }"
+                 ></multiselect>
+                 <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'destination_id'" />
+              </div>
+             
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="staticEmail" class="col-sm-2 col-form-label"
+              >Enter description <span class="required">*</span></label
+            >
+            <div class="col-sm-10">
+                <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{GeneralData.Description}}</label>
+              <textarea
+                v-if="ButtonStatus"
+                name="editor"
+                cols="30"
+                rows="4"
+                class="form-control"
+                :class="{ 'error-input' : errors['description'] }"
+                v-model="GeneralData.Description"
+              ></textarea>
+              <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'description'" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Teaser title <span class="required">*</span> </label
+            >
+            <div class="col-sm-10">
+                <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{GeneralData.TeaserTitle}}</label>
+              <input
+                v-if="ButtonStatus"
+                type="text"
+                class="form-control"
+                :class="{ 'error-input' : errors['teaser_title'] }"
+                id="inputPassword"
+                placeholder="Enter teaser title"
+                v-model="GeneralData.TeaserTitle"
+              />
+              <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'teaser_title'" />
+            </div>
+          </div>
+          <div class="form-group row">
+              <label for="inputPassword" class="col-sm-2 col-form-label">Price
+                  basis <span class="required">*</span></label>
+              <div class="col-sm-10">
+                  <label v-if="!ButtonStatus" for="staticEmail" class="readonly"><span v-if="GeneralData.PricingBasis">{{GeneralData.PricingBasis ? GeneralData.PricingBasis.name : ''}}</span></label>
+                  <div class="multiselect-input" v-if="ButtonStatus">
+                      <multiselect
+                      :options='getPricingBasis'
+                      v-model="GeneralData.PricingBasis"
+                      label="name"
+                      :track-by="'name'"
+                      placeholder="Choose Pricing Basis.."
+                      :class="{ 'error-input' : errors['pricing_basis_id'] }"
+                      ></multiselect>
+                      <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'pricing_basis_id'" />
+                   </div>
+              </div>
+          </div>
+          <div class="form-group row">
+              <label for="inputPassword" class="col-sm-2 col-form-label">Price ($ USD)<span class="required">*</span>
+                  </label>
+                  <div class="col-sm-10">
+                          <label v-if="!ButtonStatus"for="staticEmail" class="readonly">{{GeneralData.Price}}</label>
+                          <input
+                              v-if="ButtonStatus"
+                              type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');"
+                              class="form-control"
+                              id="inputPassword"
+                              placeholder="eg. 1400"
+                              v-model="GeneralData.Price"
+                              :class="{ 'error-input' : errors['base_price'] }"
+                          />
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'base_price'" />
+                   </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Tour type <span class="required">*</span></label
+            >
+            <div class="col-sm-10">
+              <label v-if="!ButtonStatus" for="staticEmail" class="readonly"><span v-if="GeneralData.TourTypeValue">{{GeneralData.TourTypeValue.name}}</span></label>
+              <div class="multiselect-input" v-if="getAllTourTypeList">
+                 <multiselect
+                 v-if="ButtonStatus"
+                 :options='getAllTourTypeList'
+                 v-model="GeneralData.TourTypeValue"
+                 label="name"
+                  :track-by="'name'"
+                  placeholder="Choose Tour Type.."
+                  :class="{ 'error-input' : errors['tour_type_id'] }"
+                 ></multiselect>
+                 <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'tour_type_id'" />
+              </div>
+             
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Difficulty level <span class="required">*</span></label
+            >
+            <div class="col-sm-10">
+
+                  <label v-if="!ButtonStatus" for="staticEmail" class="readonly"><span v-if="GeneralData.DifficultyLevelValue">{{GeneralData.DifficultyLevelValue.name}}</span></label>
+             
+                
+                <div class="multiselect-input" v-if="getALLDifficultyLevelList">
+                  <multiselect
+                  v-if="ButtonStatus"
+                  :options='getALLDifficultyLevelList'
+                  v-model="GeneralData.DifficultyLevelValue"
+                  label="name"
+                  :track-by="'name'"
+                  placeholder="Choose Difficulty Level.."
+                  :class="{ 'error-input' : errors['difficulty_level_id'] }"
+                  ></multiselect>
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'difficulty_level_id'" />
+                 </div>
+            </div>
+          </div>
+
+          <div class="form-group row" >
+            <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Altitude</label
+            >
+            <div class="col-sm-5">
+                <label v-if="!ButtonStatus" for="staticEmail" class="readonly position-relative">
+                    {{GeneralData.AltitudeInMeter}}
+                  <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon1">meter</span>
+                  </div>
+                </label>
+              <div class="input-group" v-if="ButtonStatus">
+                  <input
+                    type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');"
+                    v-if="ButtonStatus"
+                    class="form-control"
+                    id="inputPassword"
+                    placeholder="Altitude in meter"
+                    v-model="GeneralData.AltitudeInMeter"
+                    @keyup="ConvertToFeet"
+                  />
+                  <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon1">meter</span>
+                  </div>
+              </div>
+            </div>
+            <div class="col-sm-5">
+                <label v-if="!ButtonStatus" for="staticEmail" class="readonly position-relative">
+                    {{GeneralData.AltitudeInFeet}}
+                  <div class="input-group-append">
+                      <span class="input-group-text" id="basic-addon1">feet</span>
+                  </div>
+                </label>
+              <div class="input-group" v-if="ButtonStatus">
+                  <input
+                  type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');"
+                  class="form-control"
+                  id="inputPassword"
+                  placeholder="Altitude in feet"
+                  v-model="GeneralData.AltitudeInFeet"
+                  @keyup="ConvertToMeter"
+                />
+                <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon1">feet</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+          <div class="content-block">
+            <div class="row">
+              <div class="col-md-10 offset-md-2">
+                <button   v-if="ButtonStatus" class="btn default-btn save-btn" type="submit" @click.prevent="createProduct">
+                  Save
+                  <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                </button>
+                <button  v-if="ButtonStatus" class="btn default-btn cancel" type="submit" @click.prevent="cancelPricingRule">
+                  Cancel
+                </button>
+                <button v-if="!ButtonStatus" class="btn default-btn" type="submit" @click.prevent="editPricingRule">
+                  Edit
+                </button>
+              </div>
+              <p v-if="Message.length">{{Message}}</p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

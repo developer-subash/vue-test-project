@@ -1,0 +1,73 @@
+<div>
+  <div class="modal-wrap" v-if="titles && limitdata">
+    <div class="modal fade" id="uploadDocumentModel" tabindex="-1" role="dialog"
+      aria-labelledby="exampleModalCenterTitle" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content text-left">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">
+              <span v-if="titles.modal_title">{{titles.modal_title}}</span>
+              <span v-else>Upload File</span>
+            </h5>
+            <button type="button" @click="closeModal($event)" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="error-list" v-if="validationerrors">
+              <ul class="error-msg">
+                <li v-for="(error,x) in validationerrors" :key="x">
+                  <div v-for="(err,i) in error" :key="i">
+                    <p> {{err}}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="form-modified">
+                <!-- <error_msg :errors="ui.errors"></error_msg> -->
+
+                <div class="form-group" v-if="checkedvideourl == false">
+                  <!-- {{limitdata}} -->
+                  <!-- {{document.maxSizeInMB}} -->
+                  <div class="custom-file">
+                    <input type="file" @change="OnDocumentChange($event)" id="customDocument" class="custom-file-input" accept="image/*">
+                    <label v-if="titles.browse_title" :class="{ 'error-input' : errors['image_validate']}"
+                      class="custom-file-label" for="customDocument">{{titles.browse_title}}</label>
+                    <label v-else>Browse File</label>
+                  </div>
+
+                </div>
+                <validation-error v-if="iserror" :isError="iserror" :errors="errors" :field="'image_validate'" />
+                <div class="form-group" v-if="checkedtitle == true">
+                  <input :class="{ 'error-input' : errors['segment_title'] }" type="text" class="form-control"
+                    id="inputPassword" placeholder="Enter Title" v-model="ImageTitle" />
+                  </div>
+                  <validation-error v-if="iserror" :isError="iserror" :errors="errors" :field="'segment_title'" />
+
+                <div class="img-preview" v-if="ImgData.length > 0">
+                  <a href="" class="btn round-btn" @click.prevent="removeUploadedFile()"><i
+                      class="fas fa-times"></i></a>
+
+                  <img class="preview" :src="ImgData">
+                  <!-- <clipper-basic class="preview" :src="ImgData"></clipper-basic> -->
+                  <!-- <clipper-basic
+                  :src="ImgData"
+                    ref="clipper"
+                    @load="imgLoad"
+                    ></clipper-basic> -->
+                </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" :disabled="is_uploading" @click.stop="uploadFile()" class="btn default-btn"
+              data-dismiss="modal">{{(is_uploading) ? 'Processing' : titles.btn_title}}</button>
+            <button type="button" class="btn default-btn cancel" @click="closeModal()"
+              data-dismiss="modal">Cancel</button>
+          </div>
+          <!-- <processing_msg :is_saving="is_uploading"></processing_msg> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

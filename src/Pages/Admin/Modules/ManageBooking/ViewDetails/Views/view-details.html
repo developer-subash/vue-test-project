@@ -1,0 +1,367 @@
+<div>
+  <div class="breadcrumb-block">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          View Details
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <FlashMessage></FlashMessage>
+  <div class="view-table">
+    <div class="white-box pb-0">
+     
+      <div class="table-title">
+          <div class="error-list" v-if="errors">
+              <ul class="error-msg">
+                <li v-for="(error,x) in errors" :key="x">
+                  <div v-for="(err,i) in error" :key="i">
+                    <p> {{err}}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+        <div class="container-fluid px-0">
+          <div class="row align-items-center">
+            <div class="col-lg-6" v-if="TrekList.title">
+              <h5>{{TrekList.title}}</h5>
+            </div>
+            <div class="col-lg-6" v-else>
+              <h5> - </h5>
+            </div>
+            <div class="col-lg-6">
+              <div class="depart-date" v-if="DepartureList.start_date">
+                  <p> Departure date: {{DepartureList.start_date}}</p>
+              </div>
+              <div class="depart-date" v-else>
+                  <p> Departure date: - </p>
+              </div>
+            
+            </div>
+          </div>
+          <div class="manage-booking-table">
+              <div class="container-fluid px-0">
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <a href="javascript:void(0)" class="btn btn-danger btn-sm" @click.prevent="showModal"><i class="fas fa-times"></i> Cancel this booking</a>
+                      <a href="javascript:void(0)" class="btn btn-success btn-sm"><i class="fas fa-check"></i> Mark as complete</a>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="top-btn">
+                        <a href="javascript:void(0)" class="btn btn-primary btn-sm" @click.prevent="downloadPdf"><i class="fas fa-download" ></i> Download as pdf</a>
+                        <a href="javascript:void(0)" class="btn btn-primary btn-sm"> <i class="fas fa-envelope"></i> Send as email</a>
+                        <a href="javascript:void(0)" class="btn btn-primary btn-sm"><i class="fas fa-print"></i> Print</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-lg-6">
+                  <div class="invoice-heading">
+                      <h5>Invoice to:</h5>
+                      <!-- <p class="mb-0">{{CustomerList}}</p> -->
+                      <p class="mb-0" v-if="CustomerList.title">{{CustomerList.title}} {{CustomerList.firstname}} {{CustomerList.lastname}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="CustomerList.email">{{CustomerList.email}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="CustomerList.created_at">{{CustomerList.created_at}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="CustomerList.contact_number">{{CustomerList.contact_number}}</p>
+                      <p class="mb-0" v-else>-</p>
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <div class="invoice-heading" v-if="PackageCreater">
+                      <h5>Invoice by:</h5>
+                      <p class="mb-0" v-if="PackageCreater.company_name">{{PackageCreater.company_name}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="PackageCreater.company_contact_person">{{PackageCreater.company_contact_person}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="PackageCreater.company_address_line2 || PackageCreater.company_city || PackageCreater.company_country">{{PackageCreater.company_address_line2}}, {{PackageCreater.company_city}}, {{PackageCreater.company_country}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="TrekList.created_at">{{TrekList.created_at}}</p>
+                      <p class="mb-0" v-else>-</p>
+                      <p class="mb-0" v-if="PackageCreater.company_zip">{{PackageCreater.company_zip}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="view-detail">
+              <div class="table-container">
+                <div class="table-responsive">
+                  <table id="example" class="table table-bordered">
+                    <thead class="table-light-bg">
+                      <tr>
+                        <th>Travlers detail
+                        </th>
+                        <th scope="col">Trek details
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="TrekList">
+                      <tr class="booking-detail-row">
+                        <td v-if="BookingList.total_no_of_travellers">Total number of travelers: <span>{{BookingList.total_no_of_travellers}}</span></td>
+                        <td v-else>Total number of travelers: - </td>
+                        <td v-if="TrekList.title">Package name: <span>{{TrekList.title}}</span></td>
+                        <td v-else>Package name: - </td>
+
+                      </tr>
+                      <tr class="booking-detail-row">
+                        <td v-if="BookingList.no_of_adult"> <span class="travler-title">Lead traveller:</span> 
+                          <table class="inner-table">
+                
+                            <tbody>
+                              <tr>
+                                <td>Name</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              <tr>
+                                <td>Email</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              <tr>
+                                <td>Country</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              <tr>
+                                <td>Date of birth</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              <tr>
+                                <td>Password number</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        
+                        <td v-if="TrekList.duration">Duration: <span>{{TrekList.duration}}</span></td>
+                        <td v-else>Duration: - </td>
+                      </tr>
+                      <tr class="booking-detail-row">
+                        <td v-if="BookingList.no_of_adult"><span class="travler-title">Adult</span>
+                          <table class="inner-table">
+                
+                            <tbody>
+                              <tr>
+                                <td>Name</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>
+                        </td>
+                        
+                        <td v-if="PackageCreater.company_name">Tour operator: <span>{{PackageCreater.company_name}}</span></td>
+                        <td v-else>Tour operator: - </td>
+                      </tr>
+                      <tr class="booking-detail-row">
+                        <td v-if="BookingList.no_of_youth"><span class="travler-title">Youth</span>
+                          <table class="inner-table">
+                
+                            <tbody>
+                              <tr>
+                                <td>Name</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>
+                        </td>
+                        
+                        <td>Trip difficulty: <span>Hard</span></td>
+                      </tr>
+                      <tr class="booking-detail-row-border">
+                        <td v-if="BookingList.no_of_infant"><span class="travler-title">Infant</span>
+                          <table class="inner-table">
+                
+                            <tbody>
+                              <tr>
+                                <td>Name</td>
+                                <td><span>Prabhu Chaudhary</span></td>
+                              </tr>
+                              
+                            </tbody>
+                          </table>
+                        </td>
+                        <td>
+                          <p class="sub-title" v-if="SubTotal"> Subtotal:$ {{SubTotal}}</p>
+                          <p class="sub-title" v-else> Subtotal:$ - </p>
+                         </td>
+                      </tr>
+                      <tr class="booking-detail-row" v-if="BookingList.saved_price">
+                        <td class="empty-td"></td>
+                        <td>
+                            <p class="sub-title"> Discount: $ {{BookingList.saved_price}}</p>
+                            <!-- <p class="sub-title" v-else> Discount: $ 0.00</p> -->
+                         
+                         </td>
+                      </tr>
+                      <!-- <tr class="booking-detail-row">
+                        <td class="empty-td"></td>
+                        <td>
+                            <p class="sub-title"> Tax:2.5% </p>
+                         
+                        </td>
+                      </tr> -->
+                      <tr class="booking-detail-row-border">
+                        <td class="empty-td"></td>
+                        <td v-if="BookingList.total_price">
+                          <h4>Total amount: $ {{BookingList.total_price}}</h4>
+                        </td>
+                        <td v-else>
+                          <h4>Total amount: $ 0.00</h4>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="modal-wrap">
+
+        <div class="modal fade show" id="EditDeparture" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Add departure</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="error-list" v-if="errorsSave">
+                <ul class="error-msg">
+                  <li v-for="(error,x) in errorsSave" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                      <p> {{err}}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="modal-body">
+                <div class="form-modified">
+                  <div class="form-group">
+                    <datetime v-model="EditSelectedDeparture.StartDate" format="yyyy-MM-dd" placeholder="Start Date"
+                      :class="{ 'error-input' : errors['edit_start_date'] }"></datetime>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_start_date'" />
+                  </div>
+
+                  <div class="form-group">
+                    <datetime v-model="EditSelectedDeparture.EndDate" format="yyyy-MM-dd"
+                      :class="{ 'error-input' : errors['edit_end_date'] }" placeholder="End Date"></datetime>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_end_date'" />
+                  </div>
+
+                  <div class="form-group">
+                    <datetime type="time" placeholder="Departure time" use12-hour v-model="EditSelectedDeparture.Time"
+                      :class="{ 'error-input' : errors['edit_start_time'] }"></datetime>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_start_time'" />
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="inputPassword" placeholder="Min quota"
+                      v-model="EditSelectedDeparture.MinQuota" :class="{ 'error-input' : errors['edit_min_quota'] }" />
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_min_quota'" />
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="inputPassword" placeholder="Max quota"
+                      v-model="EditSelectedDeparture.MaxQuota" :class="{ 'error-input' : errors['edit_max_quota'] }" />
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_max_quota'" />
+                  </div>
+                  <div class="form-group"></div>
+                  <div class="multiselect-input">
+                    <multiselect :options='getSeasons' v-model="EditSelectedDeparture.Season" label="name"
+                      :track-by="'name'" placeholder="Choose Suitable Seasons.."
+                      :class="{ 'error-input' : errors['edit_season_id'] }"></multiselect>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_season_id'" />
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn default-btn" @click.prevent="SaveDeparture()">Save
+                </button>
+                <button type="button" class="btn default-btn cancel"
+                  @click.prevent="hideDepartureEditModal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-wrap">
+        <div class="modal fade show" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Delete Departure</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="error-list" v-if="errorsEdit">
+                <ul class="error-msg">
+                  <li v-for="(error,x) in errorsEdit" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                      <p> {{err}}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete this ?</p>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn default-btn" @click.prevent="DeleteDeparture()">Ok</button>
+                <button type="button" class="btn default-btn cancel" @click.prevent="hideDeleteModal()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <div class="modal-wrap">
+        <div class="modal fade show" id="cancelBooking" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Delete Departure</h5>
+                <button type="button" class="close" @click.prevent="cancelModal" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <!-- <div class="error-list" v-if="errorsEdit">
+                <ul class="error-msg">
+                  <li v-for="(error,x) in errorsEdit" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                      <p> {{err}}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div> -->
+              <div class="modal-body">
+                <p>Are you sure you want to delete this ?</p>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn default-btn" @click.prevent="cancelModal">Ok</button>
+                <button type="button" class="btn default-btn cancel" @click.prevent="cancelModal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>

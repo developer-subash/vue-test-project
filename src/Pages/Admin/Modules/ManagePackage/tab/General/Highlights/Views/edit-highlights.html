@@ -1,0 +1,68 @@
+<div>
+        <p>Hello from Edit Highlight</p>
+    <!-- <div class="modal-wrap" >
+      <div
+        class="modal fade"
+        id="uploadDocumentModel"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        data-keyboard="false"
+        data-backdrop="static"
+        aria-hidden="true"
+      >
+     
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content text-left">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">
+                <span >Edit Highlight</span>
+              </h5>
+              <button
+                type="button"
+                @click="closeModal($event)"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-icon">
+                    <textarea
+                    name=""
+                    id=""
+                    placeholder="eg. Special highlights of the place"
+                    v-model="HighlightsData.Description"
+                    ></textarea>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'description'" />
+                    <div class="form-group">
+                        <div class="multiselect-input" v-if="getAllTourTypeList">
+                        <multiselect
+                            :options='getAllTourTypeList'
+                            v-model="HighlightsData.IconId"
+                            label="name"
+                            :track-by="'name'"
+                            placeholder="Choose Tour Type.."
+                            ></multiselect>
+                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'icon_id'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                :disabled="is_uploading"
+                
+                class="btn default-btn"
+                data-dismiss="modal"
+              >{{(is_uploading) ? 'Processing' : titles.btn_title}}</button>
+              <button type="button" class="btn default-btn cancel"  data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  -->
+  </div>

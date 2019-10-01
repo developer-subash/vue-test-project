@@ -1,0 +1,49 @@
+<div class="container-fluid">
+        <FlashMessage></FlashMessage>
+    <div class="row">
+        <div class="col-lg-6 px-0 d-md-none d-sm-none d-none d-lg-block">
+            <div class="entry-banner">
+                <img src="img/102NepalNeedsYou-SummitPost-Org.jpg" alt class="bg-stretch">
+            </div>
+        </div>
+        <div class="col-lg-6 px-0">
+            <div class="login-box">
+                <div class="box-title">
+                    <h1>Login</h1>
+                </div>
+                <form @submit.prevent="loginAction()">
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'error'" />
+                    <div class="form-group">
+                        <input type="email" v-model="page.user.email" class="form-control" id="exampleInputEmail1"
+                            aria-describedby="emailHelp" placeholder="Username">
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'email'" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-input">
+                                <input :type="passwordFieldType" v-model="page.user.password" class="form-control password" id="exampleInputPassword1"
+                                placeholder="Password">
+                                <span v-if="page.user.password" toggle="#password-field" id="passwordLogin" class="fa fa-fw fa-eye field-icon toggle-password" @click.prevent="switchVisibility"></span>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'password'" />
+                        </div>
+                        
+                       
+                    </div>
+                    <p>
+                        <router-link :to="{name:'business-forgetPassword'}" class="link">Forgot password?</router-link>
+                    </p>
+                    <div class="spacing">
+                        <button type="submit" :disabled="postLoading" class="default-btn" v-text="btnName">
+                            <spinner v-if="postLoading" :loading="postLoading" />
+                        </button>
+                    </div>
+                    <p>Don't have an account?
+                        <router-link :to="{name:'business-register'}" class="link">Register</router-link>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,610 @@
+{
+    "module": "trek",
+    "data": {
+        "page_id": "create_edit_trek",
+        "main_tabs": [
+            {
+                "id": "General",
+                "sections": [
+                    {
+                        "id": "General",
+                        "titles": [
+                            {
+                                "enter_title": {
+                                    "title": "Enter Title",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_destination": {
+                                    "title": "Destination",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_description": {
+                                    "title": "Enter description",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_teaser": {
+                                    "title": "Teaser title",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_tour": {
+                                    "title": "Tour type",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_difficulty": {
+                                    "title": "Difficulty level",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_altitude": {
+                                    "title": "Altitude",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Price and Duration",
+                        "titles": [
+                            {
+                                "enter_seasons": {
+                                    "title": "Suitable seasons",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_age": {
+                                    "title": "Min-Max Age",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_people": {
+                                    "title": "Min-Max people",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_duration": {
+                                    "title": "Duration",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_price_basis": {
+                                    "title": "Price basis",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_price": {
+                                    "title": "Price ($ USD)",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Pricing Rule",
+                        "titles": [
+                            {
+                                "enter_base_price": {
+                                    "title": "Base price ($)",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "true",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_set_discount": {
+                                    "title": "Set discount range",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": "",
+                                    "set_discount_range": [
+                                        {
+                                            "enter_min": {
+                                                "title": "Min quota",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            },
+                                            "enter_max": {
+                                                "title": "Max quota",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            },
+                                            "enter_discount": {
+                                                "title": "Discount percent(%)",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "enter_discount_range_covered": {
+                                    "title": "Discount range covered",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": "",
+                                    "set_discount_range": [
+                                        {
+                                            "enter_min": {
+                                                "title": "Min quota",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            },
+                                            "enter_max": {
+                                                "title": "Max quota",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            },
+                                            "enter_discount": {
+                                                "title": "Discount percent(%)",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Destinations Covered",
+                        "titles": [
+                            {
+                                "enter_destination": {
+                                    "title": "Destination ",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "true",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_destination_covered": {
+                                    "title": "Destination covered",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Highlights",
+                        "titles": [
+                            {
+                                "enter_highlight": {
+                                    "title": "Destination ",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "true",
+                                    "helper_title": "",
+                                    "titles": [
+                                        {
+                                            "enter_base_price": {
+                                                "title": "Highlight Title ",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "true",
+                                                "helper_title": ""
+                                            }
+                                        },
+                                        {
+                                            "enter_set_discount": {
+                                                "title": "Icon",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "enter_highlight_covered": {
+                                    "title": "Highlights covered",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": "Important Notes",
+                        "titles": [
+                            {
+                                "enter_cancel_infromation": {
+                                    "title": "Cancelation information ",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "true",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_extra_information": {
+                                    "title": "Extra information",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "Itinerary",
+                "sections": [
+                    {
+                        "id": "Day 1",
+                        "titles": [
+                            {
+                                "enter_segment_title": {
+                                    "title": "Segment title",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_title": {
+                                    "title": "Title",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_description": {
+                                    "title": "Description",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_duration": {
+                                    "title": "Duration",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": "",
+                                    "titles": [
+                                        {
+                                            "enter_min_duration": {
+                                                "title": "min duration",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        },
+                                        {
+                                            "enter_max_duration": {
+                                                "title": "max duration",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "enter_altitude": {
+                                    "title": "Altitude",
+                                    "req_title": "true",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": "",
+                                    "titles": [
+                                        {
+                                            "enter_in_altitude": {
+                                                "title": "altitude",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        },
+                                        {
+                                            "enter_in_feet": {
+                                                "title": "feet",
+                                                "req_title": "true",
+                                                "req_title_class": "required",
+                                                "has_helper": "false",
+                                                "helper_title": ""
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "enter_image": {
+                                    "title": "Add image",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "true",
+                                    "helper_title": ""
+                                }
+                            },
+                            {
+                                "enter_attraction": {
+                                    "title": "Attractions",
+                                    "req_title": "false",
+                                    "req_title_class": "required",
+                                    "has_helper": "false",
+                                    "helper_title": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "Includes",
+                "titles": [
+                    {
+                        "enter_includes": {
+                            "title": " Add Include ",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": "",
+                            "titles": [
+                                {
+                                    "enter_include": {
+                                        "title": "Include Title ",
+                                        "req_title": "true",
+                                        "req_title_class": "required",
+                                        "has_helper": "true",
+                                        "helper_title": ""
+                                    }
+                                },
+                                {
+                                    "enter_icon": {
+                                        "title": "Icon",
+                                        "req_title": "true",
+                                        "req_title_class": "required",
+                                        "has_helper": "false",
+                                        "helper_title": ""
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "enter_icons_covered": {
+                            "title": "Includes covered",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "false",
+                            "helper_title": ""
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "Excludes",
+                "titles": [
+                    {
+                        "enter_includes": {
+                            "title": " Add Exclude ",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": "",
+                            "titles": [
+                                {
+                                    "enter_exclude": {
+                                        "title": "Exclude Title ",
+                                        "req_title": "true",
+                                        "req_title_class": "required",
+                                        "has_helper": "true",
+                                        "helper_title": ""
+                                    }
+                                },
+                                {
+                                    "enter_icon": {
+                                        "title": "Icon",
+                                        "req_title": "true",
+                                        "req_title_class": "required",
+                                        "has_helper": "false",
+                                        "helper_title": ""
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "enter_icons_covered": {
+                            "title": "Excludes covered",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "false",
+                            "helper_title": ""
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "Gallery",
+                "titles": [
+                    {
+                        "enter_gallery": {
+                            "title": "Gallery",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "Booking",
+                "titles": [
+                    {
+                        "enter_name": {
+                            "title": "Name",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_departure_date": {
+                            "title": "Departure date ",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_country": {
+                            "title": "Country",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_price": {
+                            "title": "Price ($)",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_contact": {
+                            "title": "Contact",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_book_date": {
+                            "title": "Booking date",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_payment": {
+                            "title": "Payment",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    },
+                    {
+                        "enter_action": {
+                            "title": "Action",
+                            "req_title": "false",
+                            "req_title_class": "required",
+                            "has_helper": "true",
+                            "helper_title": ""
+                            
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

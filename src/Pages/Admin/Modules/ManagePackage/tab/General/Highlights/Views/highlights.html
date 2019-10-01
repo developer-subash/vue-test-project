@@ -1,0 +1,217 @@
+<div
+  class="tab-pane tab-content fade"
+  id="day4"
+  role="tabpanel"
+  aria-labelledby="contact-tab"
+>
+<FlashMessage></FlashMessage>
+  <div class="container-fluid">
+    <div class="content-block">
+        <div class="error-list" v-if="errorsMessage">
+            <ul class="error-msg" >
+                <li v-for="(error,x) in errorsMessage" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                        <p> {{err}}</p>
+                      </div>
+                </li>
+              </ul>
+        </div>
+        <form>
+            <div class="empty-data green">
+                <p>
+                    You can add, edit, or delete the highlight of the destination such as restaurant, parking, Wi-Fi, etc.
+                </p>
+              </div>
+            <div v-if="!AddDestinationStatus">
+                <a href="" @click.prevent="showAddDestination()" class="btn default-btn"><i class="fas fa-plus"></i> Add new highlight</a>
+            </div>
+          <div class="form-modified">
+            <div class="form-group row" v-if="AddDestinationStatus">
+              <label for="staticEmail" class="col-sm-2 col-form-label">
+                Highlights</label
+              >
+              <div class="col-sm-8">
+                <div class="form-group">
+                    <textarea
+                    name=""
+                    id=""
+                    :class="{ 'error-input' : errors['description'] }"
+                    placeholder="eg. Special highlights of the place"
+                    v-model="HighlightsData.Description"
+                  ></textarea>
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'description'" />
+
+                </div>
+                    
+
+                  <div class="form-group">
+                      <div class="multiselect-input" v-if="getAllTourTypeList">
+                        <multiselect
+                        :options='getAllTourTypeList'
+                        :class="{ 'error-input' : errors['icon_id'] }"
+                        v-model="HighlightsData.IconId"
+                        label="name"
+                        :track-by="'name'"
+                        :custom-label="customLabel"
+                        :show-labels="false"
+                        placeholder="Choose icon"
+                        :option-height="40"
+                        >
+                        <template slot="singleLabel" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky"><span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span></template>
+                        <template slot="option" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky">
+                          <div class="option__desc"><span class="option__title">{{ props.option.name }}</span></div>
+                        </template></multiselect>
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'icon_id'" />
+                     </div>
+                  </div>
+                </div>
+             
+               <div class="col-sm-2">
+                  <a class="btn btn-sm add-btn" href="#" role="button" @click.prevent="createHighlight()">
+                      Save
+                      <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                    </a>
+               </div>
+            
+
+              
+            </div>
+            <div class="form-group row" v-if="HighlightList" v-for="(list, index) in HighlightList" :key="index" >
+              <div class="col-sm-8 offset-2">
+                <div class="empty-data">
+                    <p v-if="HighlightList.length == 0">No Highlight List</p>
+                </div>
+                <div class="includes">
+                  <div class="includes-list-item  py-0 pr-0">
+                      
+                    <div class="includes-list hoverable-list readonly py-3" >
+                        <div class="list-ico">
+                            <img v-if="list.icon" :src="list.icon.icon_path">
+                          </div>
+                          <p>{{ list.description }}</p> 
+                          <div class="up-down">
+                              <button class="btn arrange-btn" v-if="index != 0" @click.prevent="moveHighlightUp(index, list)"><i class="fas fa-level-up-alt"></i></button>
+                              <button class="btn arrange-btn" v-if="index !== HighlightList.length -1" @click.prevent="moveHighlightDown(index, list)"><i class="fas fa-level-down-alt"></i></button>
+                          </div>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-2">
+                  <div class="includes-action">
+                      <button type="button" class="btn" @click.prevent="editHighlightUi(index, list)" >
+                          <i class="fas fa-pen"></i>
+                          </a>
+                      </button>
+                      <button type="button" class="btn red"  @click.prevent="deleteHighlightUi(index, list)">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+  </div>
+  <div class="modal-wrap">
+  <div class="modal fade show" id="edithighlights" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title">Edit Highlight</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="error-list" v-if="errorsModal">
+                <ul class="error-msg" >
+                    <li v-for="(error,x) in errorsModal" :key="x">
+                        <div v-for="(err,i) in error" :key="i">
+                            <p> {{err}}</p>
+                          </div>
+                    </li>
+                  </ul>
+            </div>
+            <div class="modal-body">
+              <div class="form-modified">
+                  <div class="form-group">
+                      <textarea
+                      name=""
+                      id=""
+                      placeholder="eg. Special highlights of the place"
+                      v-model="EditHighlight.description"
+                      class="form-control"
+                      :class="{ 'error-input' : errors['edit_description'] }"
+                    ></textarea>
+                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_description'" />
+                  </div>
+                  <div class="form-group">
+                      <div class="multiselect-input" v-if="getAllTourTypeList">
+                        <multiselect
+                        :options='getAllTourTypeList'
+                        v-model="EditHighlight.icon_id"
+                        label="name"
+                        :track-by="'name'"
+                        :custom-label="customLabel"
+                        :show-labels="false"
+                        placeholder="Choose icon"
+                        :option-height="40"
+                        :class="{ 'error-input' : errors['edit_icon_id'] }"
+                        >
+                        <template slot="singleLabel" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky"><span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span></template>
+                        <template slot="option" slot-scope="props"><img class="option__image" :src="props.option.icon_path" alt="No Man’s Sky">
+                          <div class="option__desc"><span class="option__title">{{ props.option.name }}</span></div>
+                        </template>
+                      </multiselect>
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_icon_id'" />
+                     </div>
+                    </div>
+              </div>
+               
+            </div>
+
+          
+              
+              
+            <div class="modal-footer">
+                <button type="button" class="btn default-btn" @click.prevent="SaveEditHighlightItem">Save</button>
+                <button type="button" class="btn default-btn cancel"  aria-label="Close" @click.prevent="hideDeleteModal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="modal-wrap">
+    <div class="modal fade show" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Departure</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="error-list" v-if="errors">
+                    <ul class="error-msg" >
+                        <li v-for="(error,x) in errors" :key="x">
+                            <div v-for="(err,i) in error" :key="i">
+                                <p> {{err}}</p>
+                              </div>
+                        </li>
+                      </ul>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this ?</p>
+                </div>
+  
+                <div class="modal-footer">
+                    <button type="button" class="btn default-btn" @click.prevent="DeleteHighlightItem()">Ok</button>
+                    <button type="button" class="btn default-btn cancel"aria-label="Close" @click.prevent="hideDelete">Cancel</button>
+                </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

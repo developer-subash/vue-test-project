@@ -1,0 +1,436 @@
+<div>
+  <div class="breadcrumb-block">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Manage Booking
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <FlashMessage></FlashMessage>
+  <div class="white-box pb-0">
+    <div class="error-list" v-if="errorsMessage">
+      <ul class="error-msg">
+        <li v-for="(error,x) in errorsMessage" :key="x">
+          <div v-for="(err,i) in error" :key="i">
+            <p> {{err}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="sort-wrapper">
+      <div class="row">
+        <div class="col-lg-6">
+          <h5>Filter by:</h5>
+        </div>
+        <div class="col-lg-6">
+          <div class="clear text-right" @click="clearAllFilter">
+            <a>
+              <i class="fas fa-redo"></i> clear all filters
+            </a>
+          </div>
+        </div>
+      </div>
+      <form action="#">
+        <div class="form-modified">
+          <div class="row">
+            <div class="col-lg-4" >
+              <div class="form-group">
+                <label for="Package title">Booking type</label>
+                <div class="multiselect-input">
+                  <multiselect
+                  :options='BookingTypeList'
+                  label="name"
+                  :track-by="'id'"
+                  v-model="BookingType"
+                  @input="getDepartureByFilter()"
+                  placeholder="Choose Status.."
+                  ></multiselect>
+                </div>  
+              </div>
+            </div>
+            <!-- {{StatusList}}
+            {{TrekList.title}} -->
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="Package title">Trek</label>
+                <div class="multiselect-input" >
+                  <multiselect :options='TrekList' label="title" :track-by="'id'" v-model="GetTrek"
+                    @input="getDepartureList()"   :disabled="TrekStatusDisable" placeholder="Choose Trek.."></multiselect>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-lg-4" v-if="!TrekStatusDisable">
+              <div class="form-group">
+                <label for="Package title">Trek</label>
+                <div class="multiselect-input" v-if="StatusList">
+                  <multiselect :options='TrekList' label="title" :track-by="'id'" v-model="GetTrek"
+                    @input="getDepartureList()"  placeholder="Choose Trek.."></multiselect>
+                </div>
+              </div>
+            </div> -->
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="Package title">Departure</label>
+                <div class="multiselect-input" v-if="FilterDepartureList">
+                  <multiselect :options='FilterDepartureList' label="start_date" :track-by="'id'" v-model="DepartureDate"
+                    placeholder="Choose Season.." @input="getDepartureByFilter()"></multiselect>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="advance-filter">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="Package title">Customer name</label>
+                  <input type="text" placeholder="Enter customer name" class="form-control" v-model="SearchByName" @keyup="getDepartureByFilter()">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="Package title">Customer phone number</label>
+                  <input type="text" placeholder="Enter customer name" class="form-control" v-model="SearchByNumber" @keyup="getDepartureByFilter()">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="Package title">Customer email</label>
+                  <input type="text" placeholder="Enter customer email address" class="form-control" v-model="SearchByEmail" @keyup="getDepartureByFilter()">
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label for="Package title">Payment method</label>
+                  <div class="multiselect-input">
+                    <multiselect :options='PaymentMethodList' label="name" :track-by="'name'" v-model="SearchByPayment"
+                      @input="getDepartureByFilter()" placeholder="Choose payment method"></multiselect>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <label for="Package title">Payment date between</label>
+                <div class="row">
+                  <div class="col-lg-6">
+                    <div class="input-group attached-date">
+                      <datetime v-model="GetStartDate" format="yyyy-MM-dd" placeholder="Start Date"></datetime>
+                      <div class="input-group-append attached-label"><span id="basic-addon1"
+                          class="input-group-text">Start date</span></div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="input-group attached-date">
+                      <datetime v-model="GetEndDate" format="yyyy-MM-dd" placeholder="End Date" @input="getDepartureByFilter()"></datetime>
+                      <div class="input-group-append attached-label"><span id="basic-addon1"
+                          class="input-group-text">End date</span></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-lg-4">
+                  <div class="form-group">
+                    <label for="Package title">Payment status</label>
+                    <div class="multiselect-input">
+                      <multiselect :options='PaymentStatusList' label="name" :track-by="'id'" v-model="SearchByPaymentStatus"
+                        @input="getDepartureByFilter()" placeholder="Choose payment method"></multiselect>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+          <a class="advance-filter-btn" @click.prevent="openAdvanceFilter"><i class="fas fa-search"></i> Advance filter</a>
+
+        </div>
+
+      </form>
+      <hr>
+    </div>
+
+    <div class="table-title">
+      <div class="container-fluid px-0">
+        <div class="row align-items-center">
+          <div class="col-lg-10">
+            <h5>Manage booking</h5>
+          </div>
+          <!-- <div class="col-lg-2">
+            <a class="btn add-btn" href="#" @click.prevent="departureModal()"><i class="fas fa-plus"></i> Add New
+              Departure</a>
+          </div> -->
+        </div>
+      </div>
+    </div>
+    <div class="manage-booking-table">
+      <div class="table-container">
+        <div class="table-responsive">
+          <table class="table" id="example">
+            <thead class="table-light-bg">
+              <tr>
+                <th>Trek title
+                  <!-- <i class="fas fa-chevron-up"></i>
+                  <i class="fas fa-chevron-down"></i> -->
+                </th>
+                <th scope="col">Departure date
+                  <!-- <i class="fas fa-chevron-up"></i>
+                  <i class="fas fa-chevron-down"></i> -->
+                </th>
+                <th scope="col">Start time
+                  <!-- <i class="fas fa-chevron-up"></i>
+                  <i class="fas fa-chevron-down"></i> -->
+                </th>
+                <th scope="col">
+                  Booking type
+
+                </th>
+                <th scope="col">
+                  Payment status
+                  <!-- <i class="fas fa-chevron-down"></i> -->
+                </th>
+                <th scope="col">
+                  Payment date
+
+                  <!-- <i class="fas fa-chevron-down"></i> -->
+                </th>
+                <th scope="col">
+                  Total cost
+                  <!-- <i class="fas fa-chevron-down"></i> -->
+                </th>
+
+                <th scope="col">
+                  Action
+                </th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in DepartureList" :key="index" class="booking-detail-row">
+                <td v-if="item.trek">{{item.trek.title}}</td>
+                <td v-else>-</td>
+                <td v-if="item.departure">{{item.departure.start_date}}</td>
+                <td v-else>-</td>
+                <td v-if="item.departure">{{item.departure.start_time}}</td>
+                <td v-else>-</td>
+                <td v-if="item">{{item.type}}</td>
+                <td v-else>-</td>
+                <td v-if="!item.is_paid"><span class="badge badge-danger">Not Paid</span></td>
+                <td v-else><span class="badge badge-primary">Paid</span></td>
+                <td v-if="item.paid_date">{{item.paid_date}}</td>
+                <td v-else>No Date</td>
+                <!-- <td>{{item}}</td> -->
+                <td v-if="item.total_price">
+                  <div class="badge" >
+                    <a href="javascript:void(0)"  class="badge badge-success">{{item.total_price}}</a>
+                  </div>
+                </td>
+                <td v-else>-</td>
+                <td>
+                  <div class="justify-content-start">
+                    <!-- <a class="btn default-btn green shrink-btn" @click.prevent="shrinkTable(item, index)">
+                      Quick details
+                    </a> -->
+                    <a @click.prevent='viewDetail(index, item)' class="btn default-btn">View Detail</a>
+                  </div>
+                </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+          <div v-if="DepartureList ==0" class="empty-data">
+            <p>
+              No Package List
+            </p>
+          </div>
+          <div class="spinner">
+              <moon-loader v-if="DepartureList" :loading="ui.IsLoadingFilter" :size="50" ></moon-loader>
+          <!-- <spinner v-if="IsLoading" :loading="IsLoading"></spinner> -->
+          </div>
+        </div>
+
+      </div>
+      <div class="booking-details">
+        <table class="table">
+          <thead class="table-light-bg" v-if="SelectedBooking.Trek">
+            <tr>
+              <th scope="col">{{SelectedBooking.Trek.title}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="booking-detail-wrapper ">
+                  <div class="row">
+                          <!-- <div class="col-lg-6">
+                              <p>Customer name</p>
+                            </div>
+                            <div class="col-lg-6">
+                              <p> <strong>fdsafadfa</strong></p>
+                            </div> -->
+                            <div class="col-lg-6" v-if="SelectedBooking.Country">
+                              <p>Contry</p>
+                            </div>
+                            <div class="col-lg-6">
+                              <p> <strong>{{SelectedBooking.Country}}</strong></p>
+                            </div>
+                            <div class="col-lg-6" v-if="SelectedBooking.DOB">
+                              <p>Date of birth</p>
+                            </div>
+                            <div class="col-lg-6">
+                              <p> <strong>{{SelectedBooking.DOB}}</strong></p>
+                            </div>
+                            <div class="col-lg-6" v-if="SelectedBooking.Email">
+                              <p>Customer email</p>
+                            </div>
+                            <div class="col-lg-6">
+                              <p> <strong>{{SelectedBooking.Email}}</strong></p>
+                            </div>
+                            <div class="col-lg-6" v-if="SelectedBooking.ContactNumber">
+                              <p>Customer phone</p>
+                            </div>
+                            <div class="col-lg-6">
+                              <p> <strong>{{SelectedBooking.ContactNumber}}</strong></p>
+                            </div>
+                            <!-- <div v-if="SelectedBooking.Adult">
+                              <div class="col-lg-6">
+                                <p>No of adult</p>
+                              </div>
+                              <div class="col-lg-6">
+                                <p> <strong>{{SelectedBooking.Adult}}</strong></p>
+                              </div>
+                            </div>
+                            <div v-if="SelectedBooking.Youth">
+                              <div class="col-lg-6">
+                                <p>No of youth</p>
+                              </div>
+                              <div class="col-lg-6">
+                                <p> <strong>{{SelectedBooking.Youth}}</strong></p>
+                              </div>
+                            </div>
+                            <div v-if="SelectedBooking.Infant">
+                              <div class="col-lg-6">
+                                <p>No of infant</p>
+                              </div>
+                              <div class="col-lg-6">
+                                <p> <strong>{{SelectedBooking.Infant}}</strong></p>
+                              </div>
+                            </div> -->
+                      </div>
+                </div>
+
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+      <Pager @onPaging="onPaging" :pager="paging"></Pager>
+    </div>
+
+  </div>
+  
+  <div class="modal-wrap">
+
+    <div class="modal fade show" id="EditDeparture" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add departure</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="error-list" v-if="errorsSave">
+            <ul class="error-msg">
+              <li v-for="(error,x) in errorsSave" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-modified">
+              <div class="form-group">
+                <datetime v-model="EditSelectedDeparture.StartDate" format="yyyy-MM-dd" placeholder="Start Date"
+                  :class="{ 'error-input' : errors['edit_start_date'] }"></datetime>
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_start_date'" />
+              </div>
+
+              <div class="form-group">
+                <datetime v-model="EditSelectedDeparture.EndDate" format="yyyy-MM-dd"
+                  :class="{ 'error-input' : errors['edit_end_date'] }" placeholder="End Date"></datetime>
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_end_date'" />
+              </div>
+
+              <div class="form-group">
+                <datetime type="time" placeholder="Departure time" use12-hour v-model="EditSelectedDeparture.Time"
+                  :class="{ 'error-input' : errors['edit_start_time'] }"></datetime>
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_start_time'" />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="inputPassword" placeholder="Min quota"
+                  v-model="EditSelectedDeparture.MinQuota" :class="{ 'error-input' : errors['edit_min_quota'] }" />
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_min_quota'" />
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="inputPassword" placeholder="Max quota"
+                  v-model="EditSelectedDeparture.MaxQuota" :class="{ 'error-input' : errors['edit_max_quota'] }" />
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_max_quota'" />
+              </div>
+              <div class="form-group"></div>
+              <div class="multiselect-input">
+                <multiselect :options='getSeasons' v-model="EditSelectedDeparture.Season" label="name"
+                  :track-by="'name'" placeholder="Choose Suitable Seasons.."
+                  :class="{ 'error-input' : errors['edit_season_id'] }"></multiselect>
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_season_id'" />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn default-btn" @click.prevent="SaveDeparture()">Save
+            </button>
+            <button type="button" class="btn default-btn cancel" @click.prevent="hideDepartureEditModal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-wrap">
+    <div class="modal fade show" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Departure</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="error-list" v-if="errorsEdit">
+            <ul class="error-msg">
+              <li v-for="(error,x) in errorsEdit" :key="x">
+                <div v-for="(err,i) in error" :key="i">
+                  <p> {{err}}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to delete this ?</p>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn default-btn" @click.prevent="DeleteDeparture()">Ok</button>
+            <button type="button" class="btn default-btn cancel" @click.prevent="hideDeleteModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

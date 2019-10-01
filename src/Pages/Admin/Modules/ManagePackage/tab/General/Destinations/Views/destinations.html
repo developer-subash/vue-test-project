@@ -1,0 +1,175 @@
+<div
+  class="tab-pane tab-content fade"
+  id="day5"
+  role="tabpanel"
+  aria-labelledby="contact-tab"
+>
+<FlashMessage></FlashMessage>
+  <div class="container-fluid">
+    <div class="content-block">
+        <div class="error-list" v-if="errorsMessage">
+            <ul class="error-msg" >
+                <li v-for="(error,x) in errorsMessage" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                        <p> {{err}}</p>
+                      </div>
+                </li>
+              </ul>
+        </div>
+        <form>
+            <div class="form-modified">
+                <div class="empty-data green">
+                    <p>
+                        You can add, edit, move, or delete the destination.
+                    </p>
+                  </div>
+              <div v-if="!AddDestinationStatus">
+                <a href="" @click.prevent="showAddDestination()" class="btn default-btn"><i class="fas fa-plus"></i> Add Destination</a>
+              </div>
+                <div v-if="AddDestinationStatus" class="form-group row">
+                    <!-- <label for="inputPassword" class="col-sm-2 col-form-label"
+                      >Destinations covered</label> -->
+                    <div class="col-sm-8 offset-lg-2"> 
+                      <div class="multiselect-input">
+                          <multiselect
+                          :options='DestinationMasterData'
+                          v-model="DestinationData.Destination"
+                          label="name"
+                          :track-by="'name'"
+                          placeholder="Choose Destinations.."
+                          :class="{ 'error-input' : errors['destination_id'] }"
+                          ></multiselect>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'destination_id'" />
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <a
+                        class="btn btn-sm add-btn"
+                        href="#"
+                        role="button"
+                        @click.prevent="AddDestination()"
+                        >
+                       Add destination
+                       <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                      </a>
+                    </div>
+                   
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label for="inputPassword" class="col-sm-2 col-form-label"
+                      >Destinations covered</label
+                    >
+                    <div class="col-sm-10">
+                    <div class="form-group row align-items-center"  v-if="DestinationData"
+                    v-for="(destination, index) in DestinationData"
+                    :key="index">
+                      <div class="col-sm-8">                       
+                        <label class="readonly hoverable-list" v-if="!destination.IsActive">
+                         <div class="up-down">
+                            <button class="btn arrange-btn" v-if="index != 0" @click.prevent="moveDestinationUp(index, destination)"><i class="fas fa-level-up-alt"></i></button>
+                            <button class="btn arrange-btn" v-if="index !== DestinationData.length -1" @click.prevent="moveDestinationDown(index, destination)"><i class="fas fa-level-down-alt"></i></button>
+                         </div>
+                          
+                          <span v-if="destination.destination">{{destination.destination ? destination.destination.name : ''}}</span></label>
+                      
+                      <div class="multiselect-input" v-if="destination.IsActive">
+                          <multiselect
+                          :options='DestinationMasterData'
+                          v-model="Destination"
+                          label="name"
+                          :track-by="'name'"
+                          placeholder="Choose Difficulty Level.."
+                          :class="{ 'error-input' : errors['edit_destination_id'] }"
+                          ></multiselect>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'edit_destination_id'" />
+                      </div>
+                      
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="includes-action justify-content-start">
+                          <button
+                            v-if="!destination.IsActive"
+                            type="button"
+                            class="btn blue"
+                            @click.prevent="EditPricing(index, destination)"
+                          >
+                            <i class="fas fa-pen"></i>
+                          </button>
+                          <button
+                            v-if="destination.IsActive == true"
+                            type="button"
+                            class="btn green"
+                            @click.prevent="SavePricing(destination)"
+                          >
+                            <i class="fas fa-save"></i>
+                          </button>
+                          <button
+                            v-if="destination.IsActive"
+                            type="button"
+                            class="btn red"
+                            @click.prevent="CancelPricing(index,destination)"
+                          >
+                            <i class="fas fa-times"></i>
+                          </button>
+                          <button
+                            v-if="!destination.IsActive"
+                            type="button"
+                            class="btn red"
+                            @click.prevent="deleteDestination(index, destination)"
+                          >
+                            <i class="fas fa-minus"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="modal-wrap">
+                      <div class="modal fade show" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">Delete Departure</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">×</span>
+                                      </button>
+                                  </div>
+                                  <div class="error-list" v-if="errorsModal">
+                                      <ul class="error-msg" >
+                                          <li v-for="(error,x) in errorsModal" :key="x">
+                                              <div v-for="(err,i) in error" :key="i">
+                                                  <p> {{err}}</p>
+                                                </div>
+                                          </li>
+                                        </ul>
+                                  </div>
+                                  <div class="modal-body">
+                                      <p>Are you sure you want to delete this ?</p>
+                                  </div>
+                    
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn default-btn" @click.prevent="DeletePricing()">Ok</button>
+                                      <button type="button" class="btn default-btn cancel" aria-label="Close" @click.prevent="hideModalDestination">Cancel</button>
+                                  </div>
+                            </div>
+                          </div>
+                      </div>
+                    
+                    </div>
+                    </div>
+                   
+                    <div class="empty-data">
+                        <p v-if="DestinationData.length == 0 ">No Destination List</p>
+                    </div>
+                   
+                  </div>
+                    </div>
+                 
+                  
+                  
+            </div>
+           
+          </form>
+      
+    </div>
+  </div>
+  
+</div>

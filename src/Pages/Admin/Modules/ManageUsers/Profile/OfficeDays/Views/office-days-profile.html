@@ -1,0 +1,424 @@
+<div>
+    <div class="tab-pane fade" id="officetime" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="container-fluid">
+            <div class="content-block">
+                <div class="empty-data blue my-0">
+                    <p>
+                        You can browse, add, or edit the images for the gallery of the package.
+                    </p>
+                </div>
+                <div class="form-modified py-2">
+                    <label for="Package title" class="col pl-0">Select days</label>
+                    <div class="checkbox-block my-3">
+                        <!-- <div class="row">
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Sunday" @click.prevent="checkday('sunday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Sunday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Monday" @click.prevent="checkday('monday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Monday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Tuesday" @click.prevent="checkday('tuesday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Tuesday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Wednesday" @click.prevent="checkday('wednesday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Wednesday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Thursday" @click.prevent="checkday('thursday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Thursday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Friday" @click.prevent="checkday('friday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Friday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Saturday" @click.prevent="checkday('saturday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Saturday</label>
+                            </div>
+                        </div> -->
+                        <div class="row">
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Sunday" @change="checkday('sunday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Sunday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Monday" @change="checkday('monday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Monday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Tuesday" @change="checkday('tuesday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Tuesday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Wednesday" @change="checkday('wednesday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Wednesday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Thursday" @change="checkday('thursday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Thursday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Friday" @change="checkday('friday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Friday</label>
+                            </div>
+                            <div class="col">
+                                <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                                    v-model="OfficeDays.Saturday" @change="checkday('saturday')">
+                                <label for="exampleCheck1" class="form-check-label pl-4">Saturday</label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- <div class="row align align-items-center" v-if="OfficeDays.Sunday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Sunday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align align-items-center" v-if="OfficeDays.Monday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Monday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align align-items-center" v-if="OfficeDays.Tuesday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Tuesday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align align-items-center" v-if="OfficeDays.Wednesday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Wednesday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align align-items-center" v-if="OfficeDays.Thursday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Thursday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align align-items-center" v-if="OfficeDays.Friday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Friday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align align-items-center" v-if="OfficeDays.Saturday">
+                        <div class="col-lg-3">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0">Saturday</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.Opening"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="Time.closing"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="includes-action">
+                                <button type="button" class="btn blue" @click.prevent="editIncludes(index, list)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button type="button" class="btn red" @click.prevent="selectedDelete(index, list)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn green"><i class="fas fa-save"></i></button>
+                                <button type="button" class="btn red"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button></button>
+                    </div> -->
+                    <div class="row align align-items-center" v-if="OfficeDaywithHour.length" v-for="(item, index) in OfficeDaywithHour"
+                    :key="index">
+                        <div class="col-lg-4">
+                            <label for="">Day</label>
+                            <div class="form-group">
+                                <div class="readonly bg-white">
+                                    <p class="mb-0 text-capitalize">{{item.day}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="">Opening time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="item.opening_time"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="">Closing time</label>
+                            <div class="form-group">
+                                <datetime type="time" placeholder="Departure time" use12-hour v-model="item.closing_time"
+                                    :class="{ 'error-input' : errors['start_time'] }"></datetime>
+                                <validation-error v-if="isError" :isError="isError" :errors="errors"
+                                    :field="'start_time'" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="empty-data" v-if="!OfficeDaywithHour.length"><p>No Office Hour List</p></div>
+                    <div v-if="OfficeDaywithHour.length">
+                            <button type="submit" class="default-btn save-btn" @click.prevent="saveOfficeDaywithHour">
+                                    Save
+                            </button>
+                       
+                        <button type="submit" class="default-btn cancel" @click.prevent="saveOfficeDaywithHour">
+                           Cancel
+                        </button>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

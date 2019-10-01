@@ -1,0 +1,237 @@
+<div>
+  <div class="breadcrumb-block">
+      <FlashMessage></FlashMessage>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Manage users</li>
+      </ol>
+    </nav>
+  </div>
+  <div class="manage-package-block">
+    <div class="white-box">
+      <div class="table-title pb-0">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <h5>Manage users</h5>
+              <p>To manage users and their role.</p>
+            </div>
+            <div class="col-lg-6 text-lg-right">
+              <a
+                class="btn add-btn d-inline-block"
+                href="invite-user.php"
+                role="button"
+                @click.prevent="redirectToInvite"
+                ><i class="fas fa-user"></i> Invite user</a
+              >
+
+              <a
+                class="btn add-btn d-inline-block ml-3"
+                href="pending.php"
+                role="button"
+                @click.prevent="redirectToPendingList"
+                ><i class="fas fa-hourglass-half"></i> View pending
+                invitation</a
+              >
+            </div>
+        </div>
+      </div>
+<hr>
+      <div class="manage-user-block">
+        <div class="form-modified">
+          <form action="">
+            <div class="form-group row">
+              <div class="col">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputPassword"
+                  placeholder="Search by username"
+                  v-model="SearchBy.Username"
+                  @keyup="searchUser()"
+                />
+              </div>
+
+              <div class="col">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="inputPassword"
+                  placeholder="Search by email"
+                  v-model="SearchBy.Email"
+                  @keyup="searchUser()"
+                />
+              </div>
+
+              <div class="col">
+                <div class="multiselect-input">
+                  <multiselect :options='StatusList' label="name" :track-by="'id'" v-model="SearchBy.Status"
+                    @input="searchUser()" placeholder="Search by status"></multiselect>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="content-block">
+          <div class="table-container">
+            <div class="table-responsive">
+              <table class="table" id="example">
+                <thead class="table-light-bg">
+                  <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">
+                      Email <i class="fas fa-chevron-down"></i>
+                    </th>
+                    <th scope="col">
+                        <div class="text-center">
+                      Role <i class="fas fa-chevron-down"></i>
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="text-center">
+                      Status <span>($)</span>
+                      <i class="fas fa-chevron-down"></i>
+                    </div>
+                    </th>
+
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      Sangam Uprety
+                    </td>
+                    <td>test.travelise@gmail.com</td>
+                    <td><div class="text-center"><span class="badge badge-primary">Admin</span></div></td>
+                    <td>
+                      <div class="status-icon">
+                        <i class="fas fa-check-circle"></i>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="inline-button-block">
+                        <a
+                          class="btn default-btn orange"
+                          href="#"
+                          role="button"
+                          data-toggle="modal"
+                          data-target="#changeRole"
+                        >
+                          <i class="fas fa-user-circle"></i> Change role
+                        </a>
+
+                        <a
+                          class="btn default-btn red"
+                          href="#"
+                          role="button"
+                          data-toggle="modal"
+                          data-target="#disableUser"
+                        >
+                          <i class="fas fa-times-circle"></i> Disable
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Sangam Uprety
+                    </td>
+                    <td>test.travelise@gmail.com</td>
+                    <td><div class="text-center"><span class="badge badge-secondary">Customer</span></div></td>
+                    <td>
+                      <div class="status-icon">
+                        <i class="fas fa-times-circle"></i>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="inline-button-block">
+                        <a
+                          class="btn default-btn orange"
+                          href="#"
+                          role="button"
+                        >
+                          <i class="fas fa-user-circle"></i> Change role
+                        </a>
+
+                        <a class="btn default-btn green" href="#" role="button">
+                          <i class="fas fa-check-circle"></i> Enable
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Sangam Uprety
+                    </td>
+                    <td>test.travelise@gmail.com</td>
+                    <td>
+                        <div class="text-center"><span class="badge badge-success">User</span></div>
+                    </td>
+                    <td>
+                      <div class="status-icon">
+                        <i class="fas fa-check-circle"></i>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="inline-button-block">
+                        <a
+                          class="btn default-btn orange"
+                          href="#"
+                          role="button"
+                        >
+                          <i class="fas fa-user-circle"></i> Change role
+                        </a>
+
+                        <a class="btn default-btn red" href="#" role="button">
+                          <i class="fas fa-times-circle"></i> Disable
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      Sangam Uprety
+                    </td>
+                    <td>test.travelise@gmail.com</td>
+                    <td>
+                        <div class="text-center"><span class="badge badge-secondary">Customer</span></div>
+                    </td>
+                    <td>
+                      <div class="status-icon">
+                        <i class="fas fa-times-circle"></i>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="inline-button-block">
+                        <a
+                          class="btn default-btn orange"
+                          href="#"
+                          role="button"
+                        >
+                          <i class="fas fa-user-circle"></i> Change role
+                        </a>
+
+                        <a class="btn default-btn green" href="#" role="button">
+                          <i class="fas fa-check-circle"></i> Enable
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <hr>
+          <Pager @onPaging="onPaging" :pager="paging"></Pager>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

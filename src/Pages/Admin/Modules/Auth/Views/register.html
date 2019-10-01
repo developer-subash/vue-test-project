@@ -1,0 +1,75 @@
+<div class="container-fluid">
+        <FlashMessage></FlashMessage>
+    <div class="row">
+        <div class="col-lg-7 px-0 d-md-none d-sm-none d-none d-lg-block">
+            <div class="entry-banner">
+
+                <img src="img/102NepalNeedsYou-SummitPost-Org.jpg" alt="" class="bg-stretch">
+
+            </div>
+        </div>
+        <div class="col-lg-5 px-0">
+            <div class="login-box">
+                <div class="box-title">
+                    <h1>Register</h1>
+                </div>
+                <div class="error-list" v-if="errors">
+                        <ul class="error-msg">
+                          <li v-for="(error,x) in errors" :key="x">
+                            <div v-for="(err,i) in error" :key="i">
+                              <p> {{err}}</p>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                <form @submit.prevent="businessRegisterAction()">
+
+                    <div class="form-group">
+                        <input type="test" class="form-control" v-model="page.user.companyname" id=""
+                             placeholder="Company Name">
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'conmpanyname'" />
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" v-model="page.user.email" id="exampleInputEmail1"
+                            aria-describedby="emailHelp" placeholder="Email">
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'email'" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" v-model="page.user.firstname" class="form-control" aria-describedby="emailHelp"
+                            placeholder="First name">
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'firstname'" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" v-model="page.user.lastname" class="form-control" aria-describedby="emailHelp"
+                            placeholder="Last name">
+                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'lastname'" />
+                    </div>
+                    <div class="form-group">
+                        <div class="password-input">
+                            <input :type="passwordFieldType" v-model="page.user.password" class="form-control password" placeholder="Password">
+                            <span v-if="page.user.password" toggle="#password-field" id="passwordNew" class="fa fa-fw fa-eye field-icon toggle-password" @click.prevent="switchVisibilityNew"></span>
+                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'password'" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="password-input">
+                            <input :type="passwordFieldTypeConform" v-model="page.user.confirm_password" class="form-control password"
+                                placeholder="Confirm Password">
+                                <span v-if="page.user.confirm_password" toggle="#password-field" id="passwordConform"class="fa fa-fw fa-eye field-icon toggle-password" @click.prevent="switchVisibilityConform"></span>
+                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'confirm_password'" />
+                        </div>
+                    </div>
+                    <div class="spacing">
+                        <button type="submit" :disabled="postLoading" class="default-btn" v-text="btnName">
+                            <spinner v-if="postLoading" :loading="postLoading"></spinner>
+                        </button>
+                    </div>
+                    <p>Already have an account
+                        <router-link :to="{name:'business-login'}" class="link">Login</router-link>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

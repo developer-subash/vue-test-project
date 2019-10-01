@@ -1,0 +1,510 @@
+<div>
+  <div class="breadcrumb-block">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Detail Departure
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <FlashMessage></FlashMessage>
+  <div class="white-box">
+    <div class="error-list m-0" v-if="errorsModal">
+      <ul class="error-msg">
+        <li v-for="(error,x) in errorsModal" :key="x">
+          <div v-for="(err,i) in error" :key="i">
+            <p> {{err}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="table-title pb-2">
+      <h5>{{TrekList.title}}</h5>
+    </div>
+    <!-- Table-wrap -->
+    <div class="tabs-block mt-5">
+      <div class="top-tab">
+        <ul id="myTab" role="tablist" class="nav nav-tabs">
+          <li class="nav-item"><a id="home-tab" data-toggle="tab" href="#details-tab" role="tab" aria-controls="home"
+              aria-selected="true" class="nav-link active"><i class="fas fa-file-alt"></i>
+              Details</a></li>
+          <li class="nav-item"><a id="profile-tab" data-toggle="tab" href="#depart-price" role="tab"
+              aria-controls="profile" aria-selected="false" class="nav-link"><i class="fas fa-dollar-sign"></i>
+              Departure pricing rule</a></li>
+
+
+        </ul>
+      </div>
+
+      <div id="myTabContent" class="tab-content">
+        <div id="details-tab" role="tabpanel" class="tab-pane active">
+          <div class="sort-wrapper">
+
+            <div class="form-modified">
+              <div class="empty-data green mb-3">
+                <p>
+                  You can add the applicable departure date along with destination, duration, per pax or quota, and
+                  seasons for the package.
+                </p>
+              </div>
+              <div class="form-group row">
+                <div class="col-lg-6">
+                  <label for="Package title">Departure time</label>
+                  <datetime type="time" placeholder="Departure time" use12-hour v-model="Departure.Time"
+                    :class="{ 'error-input' : errors['start_time'] }" v-if="Departure.ShouldEdit"></datetime>
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'start_time'" />
+                  <label for="" class="readonly" v-if="!Departure.ShouldEdit">{{Departure.Time}}</label>
+                </div>
+                <!-- {{TrekList.base_price}} -->
+                <div class="col-lg-6">
+                  <label for="">Price</label>
+                  <label class="readonly" v-if="!Departure.ShouldEdit">{{DepartureList.price? DepartureList.price: TrekList.base_price}}</label>
+                  <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                    id="inputPassword" placeholder="Price" v-model="Departure.Price"
+                    :class="{ 'error-input' : errors['price'] }" v-if="Departure.ShouldEdit" />
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'price'" />
+                </div>
+              </div>
+
+
+              <!-- <input type="checkbox" id="checkbox" v-model="Departure.ShouldEdit"> Create price to Upcomming Departure -->
+
+
+              <div class="form-group row">
+                <div class="col-lg-6">
+                  <label for="">Start date</label>
+                  <datetime v-model="Departure.StartDate" format="yyyy-MM-dd" placeholder="Start Date"
+                    :class="{ 'error-input' : errors['start_date'] }" v-if="Departure.ShouldEdit"></datetime>
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'start_date'" />
+                  <label for="" class="readonly" v-if="!Departure.ShouldEdit">{{Departure.StartDate}}</label>
+                </div>
+                <div class="col-lg-6">
+                  <label for="">End date</label>
+                  <datetime v-model="Departure.EndDate" format="yyyy-MM-dd"
+                    :class="{ 'error-input' : errors['end_date'] }" placeholder="End Date" v-if="Departure.ShouldEdit">
+                  </datetime>
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'end_date'" />
+                  <label for="" class="readonly" v-if="!Departure.ShouldEdit">{{Departure.EndDate}}</label>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-lg-6">
+                  <label for="">Min quota</label>
+                  <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                    id="inputPassword" placeholder="Min quota" v-model="Departure.MinQuota"
+                    :class="{ 'error-input' : errors['min_quota'] }" v-if="Departure.ShouldEdit" />
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'min_quota'" />
+                  <label for="" class="readonly" v-if="!Departure.ShouldEdit">{{DepartureList.min_quota}}</label>
+                </div>
+                <div class="col-lg-6">
+                  <label for="">Max quota</label>
+                  <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                    id="inputPassword" placeholder="Max quota" v-model="Departure.MaxQuota"
+                    :class="{ 'error-input' : errors['max_quota'] }" v-if="Departure.ShouldEdit" />
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_quota'" />
+                  <label for="" class="readonly" v-if="!Departure.ShouldEdit">{{DepartureList.max_quota}}</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="">Choose suitable season</label>
+                <div class="multiselect-input">
+                  <multiselect :options='getSeasons' v-model="Departure.Season" label="name" :track-by="'name'"
+                    placeholder="Choose Suitable Seasons.." :class="{ 'error-input' : errors['season_id'] }"
+                    v-if="Departure.ShouldEdit">
+                  </multiselect>
+                  <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'season_id'" />
+                </div>
+                <label for="" class="readonly" v-if="!Departure.ShouldEdit"><span
+                    v-if="DepartureList.season">{{DepartureList.season.name}}</span></label>
+              </div>
+
+              <!-- <label for="inputPassword" class="col-sm-2 col-form-label"
+                            >Discount Type</label
+                          >
+                          <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="multiselect-input" v-if="RequestDurationList">
+                                    <multiselect :options='RequestDurationList' label="name" :track-by="'id'"
+                                    :class="{ 'error-input' : errors['discount_type'] }"
+                                        v-model="DiscountType" placeholder="Choose tour type.."
+                                        @input="selectDiscountType()">
+                                    </multiselect>
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'discount_type'" />
+                                </div>
+                             
+                            </div>
+                          </div> -->
+
+
+            </div>
+
+            <button type="button" class="btn default-btn" @click.prevent="enableEditMode"
+              v-if="!Departure.ShouldEdit">Edit
+            </button>
+            <button type="button" class="btn default-btn" @click.prevent="SaveDeparture"
+              v-if="Departure.ShouldEdit">Save
+            </button>
+            <button type="button" class="btn default-btn cancel" @click.prevent="hideDepartureModal"
+              v-if="Departure.ShouldEdit">Cancel</button>
+
+          </div>
+        </div>
+        <div id="depart-price" role="tabpanel" class="tab-pane">
+          <div class="container-fluid">
+            <div class="error-list" v-if="errorsMessage">
+              <ul class="error-msg">
+                <li v-for="(error,x) in errorsMessage" :key="x">
+                  <div v-for="(err,i) in error" :key="i">
+                    <p> {{err}}</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="form-modified">
+              <div class="empty-data green">
+                <p>
+                  Pricing Rule allows adding the base price of the package, along with adding, editing, or deleting the
+                  discount range.
+                </p>
+              </div>
+              <div class="form-group row">
+                <label for="inputPassword" class="col-sm-2 col-form-label">Departure package price ($)</label>
+                <div class="col-sm-4">
+                  <div class="readonly py-0">
+                    <label class="base-price">{{DepartureList.price? DepartureList.price: TrekList.base_price}}</label>
+                  </div>
+                </div>
+                <label for="inputPassword" class="col-sm-2 col-form-label">Discount Type</label>
+                <div class="col-sm-4">
+                    <div class="readonly py-0">
+                        <label class="base-price" v-if="DiscountType">{{DiscountType.name}}</label>
+                      </div>
+                  <!-- <div class="form-group">
+                    <div class="multiselect-input" v-if="RequestDurationList">
+                      <multiselect :options='RequestDurationList' label="name" :track-by="'id'"
+                        :class="{ 'error-input' : errors['discount_type'] }" v-model="DiscountType"
+                        placeholder="Choose tour type.." @input="selectDiscountType()">
+                      </multiselect>
+                      <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'discount_type'" />
+                    </div>
+
+                  </div> -->
+                </div>
+              </div>
+              <hr>
+              <div class="departure-pricing-rule">
+                <div class="row">
+                  <div class="col-lg-9">
+                    <div class="empty-data green mt-0">
+                      <p>
+                        Pricing Rule allows adding the base price of the package, along with adding, editing, or
+                        deleting the
+                        discount range.
+                      </p>
+                    </div>
+                    <div class="checkbox-block my-3">
+                        <div class="form-check pl-0">
+                          <!-- <p>helo</p> -->
+                            <input type="checkbox" id="checkbox" :disabled="DeparturePriceStatusDisable" class="form-check-input mt-0" v-model="DeparturePriceStatus">
+                            <!-- <label for="checkbox">{{ DeparturePriceStatus }}</label> -->
+                          <!-- <input type="checkbox" id="checkbox" class="form-check-input mt-0"
+                            @click="showAddDestination"> -->
+                          <label for="exampleCheck1" class="form-check-label pl-4">Create price to Upcomming
+                            departure</label></div>
+  
+                            <div v-if="StatusDeparture" class="floating-block">
+                              <h5>Are you sure?</h5>
+                              <button type="button" class="btn default-btn"
+                              @click.prevent="destinationPricingRule">
+                             Yes
+                            </button>
+                              <button type="button" class="btn default-btn cancel"
+                              @click.prevent="cancelPricingRule">
+                             No
+                            </button>
+                              
+                            </div>
+                      </div>
+                   
+                    <!-- <div class="row" v-if="AddDestinationStatus">
+                      <div class="col-lg-6">
+                        <div class="table-title pb-2 pl-0">
+                          <h5>Upcoming pricing rule</h5>
+                        </div>
+                      </div>
+                      <div class="col-lg-6">
+                        <div class="text-lg-right">
+                          <a href="" @click.prevent="showAddDestination()" class="btn default-btn"><i
+                              class="fas fa-plus"></i> Add
+                            pricing rule</a>
+                        </div>
+                      </div>
+                    </div> -->
+
+
+
+
+
+                    <div v-if="AddDestinationStatus">
+                      <strong>
+                        <label for="inputPassword" class="col-form-label">Set Discount range</label>
+                      </strong>
+                      <div class="row form-group">
+                        <div class="col-sm-3">
+                          <label for="">Min quota</label>
+                        </div>
+                        <div class="col-sm-3">
+                          <label for="">Max quota</label>
+                        </div>
+                        <div class="col-sm-3">
+                          <label for="">{{DiscountTypeTitle}}</label>
+                        </div>
+                      </div>
+                      <div class="row form-group">
+                        <div class="col-sm-3">
+                          <input type="text" @keypress="preventNonNumericalInput($event)"
+                            oninput="validity.valid||(value='');" class="form-control"
+                            :class="{ 'error-input' : errors['min_quota'] }" id="inputPassword" placeholder="Min quota"
+                            v-model="Pricing.AddMin" />
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'min_quota'" />
+                        </div>
+                        <div class="col-sm-3">
+                          <input type="text" @keypress="preventNonNumericalInput($event)"
+                            oninput="validity.valid||(value='');" class="form-control"
+                            :class="{ 'error-input' : errors['max_quota'] }" id="inputPassword" placeholder="Max quota"
+                            v-model="Pricing.AddMax" />
+                          <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_quota'" />
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="input-group">
+                            <input type="text" @keypress="preventNonNumericalInput($event)"
+                              oninput="validity.valid||(value='');" class="form-control"
+                              :class="{ 'error-input' : errors['discount_percent'] }" id="inputPassword"
+                              placeholder="Discount" v-model="Pricing.AddDiscount" />
+
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="basic-addon1">{{DiscountPlaceholder}}</span>
+                            </div>
+                          </div>
+                          <validation-error v-if="isError" :isError="isError" :errors="errors"
+                            :field="'discount_percent'" />
+                        </div>
+                        <div class="col-sm-3">
+                          <a role="button" class="btn btn-sm add-btn" @click.prevent="AddPricing()">
+                            Add pricing rule
+                            <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                          </a>
+
+                        </div>
+
+                      </div>
+                    </div>
+
+                    <hr>
+                    <!-- <pulse-loader :loading="ui.IsLoading" ></pulse-loader> -->
+
+                    <div class="empty-data blue my-0" v-if="!TrekDeparturePricingRule.length"><p>No pricing rule List</p></div>
+                    <div v-if="TrekDeparturePricingRule.length">
+                    <strong>
+                      <label for="inputPassword" class="col-form-label">Discount range
+                        covered</label>
+                    </strong>
+                    </div>
+
+                    <div>
+
+                      <div class="row form-group" v-if="TrekDeparturePricingRule.length">
+                        <div class="col-sm-3">
+                          <label for="">Min quota</label>
+                        </div>
+                        <div class="col-sm-3">
+                          <label for="">Max quota</label>
+                        </div>
+                        <div class="col-sm-3">
+                          <label for="">{{DiscountTitle}}</label>
+                        </div>
+                      </div>
+
+                      <div class="row form-group" v-for="(price, index) in TrekDeparturePricingRule" :key="index"
+                        :id="'form-'+index">
+                        <div class="col-sm-3">
+                          <label v-if="!price.IsActive" class="readonly">{{price.min_quota}}</label>
+                          <input v-if="price.IsActive" type="text" @keypress="preventNonNumericalInput($event)"
+                            oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                            placeholder="Min quota" :class="{ 'error-input' : errors['edit_min_quota'] }"
+                            v-model="EditPrice.AddMin" />
+                          <validation-error v-if="isError" :isError="isError" :errors="errors"
+                            :field="'edit_min_quota'" />
+                        </div>
+                        <div class="col-sm-3">
+                          <label v-if="!price.IsActive" class="readonly">{{price.max_quota}}</label>
+                          <input v-if="price.IsActive" type="text" @keypress="preventNonNumericalInput($event)"
+                            oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                            placeholder="Max quota" :class="{ 'error-input' : errors['edit_max_quota'] }"
+                            v-model="EditPrice.AddMax" />
+                          <validation-error v-if="isError" :isError="isError" :errors="errors"
+                            :field="'edit_max_quota'" />
+
+                        </div>
+                        <div class="col-sm-3">
+
+                          <label v-if="!price.IsActive"
+                            class="readonly">{{price.discount_percent ? price.discount_percent :price.discount_price}}</label>
+
+                          <div class="input-group">
+
+                            <input v-if="price.IsActive" type="text" @keypress="preventNonNumericalInput($event)"
+                              oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                              placeholder="Discount" :class="{ 'error-input' : errors['edit_discount_percent'] }"
+                              v-model="EditPrice.AddDiscount" />
+                            <validation-error v-if="isError" :isError="isError" :errors="errors"
+                              :field="'edit_discount_percent'" />
+                            <div class="input-group-append" v-if="price.IsActive">
+                              <span class="input-group-text" id="basic-addon1">{{DiscountPlaceholder}}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-3">
+                          <div class="includes-action justify-content-start">
+                            <button v-if="!EditPrice.EditDisabled" type="button" class="btn blue"
+                              v-tooltip.top="{ content: 'Edit', class: 'tooltip-custom tooltip-other-custom' }"
+                              @click="EditPricing(index, price)">
+                              <i class="fas fa-pen"></i>
+                            </button>
+                            <button v-if="price.IsActive == true" type="button" class="btn green"
+                              @click="SavePricing(index,price)"
+                              v-tooltip.top="{ content: 'Save', class: 'tooltip-custom tooltip-other-custom' }">
+                              <i class="fas fa-save"></i>
+                            </button>
+                            <button v-if="price.IsActive" type="button" class="btn red"
+                              @click="CancelPricing(index,price)">
+                              <i class="fas fa-times"></i>
+                            </button>
+                            <button type="button" class="btn red" data-toggle="modal" data-target="#delete"
+                              @click.prevent="selectedToDelete(index,price)">
+                              <i class="fas fa-minus"></i>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div class="modal-wrap">
+                          <div class="modal fade show" id="delete" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title">Delete Departure</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                  </button>
+                                </div>
+                                <div class="error-list" v-if="errorsMessage">
+                                  <ul class="error-msg">
+                                    <li v-for="(error,x) in errorsMessage" :key="x">
+                                      <div v-for="(err,i) in error" :key="i">
+                                        <p> {{err}}</p>
+                                      </div>
+                                    </li>
+                                  </ul>
+                                </div>
+                                <div class="modal-body">
+                                  <p>Are you sure you want to delete this ?</p>
+                                </div>
+
+                                <div class="modal-footer">
+                                  <button type="button" class="btn default-btn" data-dismiss="modal"
+                                    @click.prevent="DeletePricing(index, price)">Ok</button>
+                                  <button type="button" class="btn default-btn cancel" data-dismiss="modal"
+                                    aria-label="Close">Cancel</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3">
+                    <div class="empty-data green mt-0">
+                      <p>
+                        Pricing Rule allows adding the base price of the package, along with adding, editing, or
+                        deleting the
+                        discount range.
+                      </p>
+                    </div>
+                    <div class="table-container">
+                        <div class="empty-data blue my-0" v-if="!TrekGeneralPricingRule.length"><p>No general pricing rule List</p></div>
+                      <div class="table-responsive" v-if="TrekGeneralPricingRule.length">
+                        <table id="example" class="table">
+                          <thead class="table-light-bg">
+                            <tr>
+                              <th scope="col">Range</th>
+                              <th scope="col">Discount
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="(price,i) in TrekGeneralPricingRule" :key="i" :id="'form-'+i">
+                              <td>{{price.min_quota}} - {{price.max_quota}}</td>
+                              <td>{{price.discount_percent ? price.discount_percent :price.discount_price}}
+                                {{DiscountPlaceholderGeneral}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <!---->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-wrap">
+      <div class="modal fade show" id="informOperator" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        data-keyboard="false" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Change Discount Type</h5>
+              <button type="button" class="close" @click.prevent="hideModalSegment" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+
+            <div class="modal-body">
+              <div class="error-list" v-if="errorsModal">
+                <ul class="error-msg">
+                  <li v-for="(error,x) in errorsModal" :key="x">
+                    <div v-for="(err,i) in error" :key="i">
+                      <p> {{err}}</p>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <p>Are you sure you want change discount type from {{DiscountTitle}} to {{DiscountType.name}}.</p>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn default-btn" @click.prevent="changeDiscountType()">Yes
+                <!-- <spinner v-if="PostLoading" :loading="PostLoading"></spinner> -->
+              </button>
+              <button type="button" class="btn default-btn cancel" aria-label="Close"
+                @click.prevent="hideModalSegment">No
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

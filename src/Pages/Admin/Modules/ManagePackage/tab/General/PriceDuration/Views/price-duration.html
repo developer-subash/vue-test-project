@@ -1,0 +1,172 @@
+<div class="tab-pane fade" id="day2" role="tabpanel" aria-labelledby="profile-tab">
+        <FlashMessage></FlashMessage>
+        <div class="container-fluid">
+                <div class="error-list" v-if="errorsMessage">
+                        <ul class="error-msg" >
+                            <li v-for="(error,x) in errorsMessage" :key="x">
+                                    <div v-for="(err,i) in error" :key="i">
+                                            <p> {{err}}</p>
+                                    </div>
+                            </li>
+                          </ul>
+                    </div>
+            <div class="content-block">
+                <form>
+                    <div class="form-modified">
+                            <div class="empty-data green">
+                                    <p>
+                                            You can add, edit, or delete the price, length (duration), age-specification, per pax or quota, and seasons for the package.
+                                        </p>
+                            </div>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Suitable
+                                seasons</label>
+                            <div class="col-sm-10">
+                            <label v-if="!ButtonStatus" for="staticEmail" class="readonly"><span v-if="PriceData.Season" v-for="(season, index) in PriceData.Season" :key="index">{{season.seasons ? season.seasons.name : '' }}<span v-if="index < PriceData.Season.length -1">, </span></span></label>
+
+                                    <!-- <label v-if="!ButtonStatus" for="staticEmail" class="readonly" 
+                                    ><span v-for="(season, s) in PriceData.Season" :key="s"><span v-if="season.seasons">{{season.seasons}}</span></span> </label> -->
+                                <div  class="multiselect-input" v-if="ButtonStatus">
+                                    <multiselect
+                                    :multiple="true"
+                                    :hide-selected="true"
+                                    :options='getSeasons'
+                                    v-model="TempData"
+                                    label="name"
+                                    :track-by="'id'"
+                                    placeholder="Choose Suitable Seasons.."
+                                    :class="'overflow-input'"
+                                    :show-labels="false"
+                                    :close-on-select="false"
+                                    :taggable="false"
+                                    :preserve-search="true"
+                                    ></multiselect>
+                                    <!-- <pre class="language-json"><code>{{ PriceData.Season.seasons  }}</code></pre> -->
+                                 </div>
+                                 <!-- <multiselect v-if="ButtonStatus" v-model="PriceData.Season" placeholder="Choose Suitable Seasons.." label="name" track-by="id" :options="getSeasons" :multiple="true" :taggable="true" ></multiselect> -->
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Min-Max
+                                Age <span class="required">*</span></label>
+                            <div class="col-sm-5">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly position-relative">
+                                        {{PriceData.MinAge}}
+                                        <div class="input-group-append">
+                                                <span class="input-group-text" id="basic-addon1">min age</span>
+                                            </div>
+                                    </label>
+                                <input v-if="ButtonStatus" type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                                    placeholder="Minimum age" v-model="PriceData.MinAge" :class="{ 'error-input' : errors['min_age'] }">
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'min_age'" />
+                            </div>
+                            <div class="col-sm-5">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly position-relative">
+                                        {{PriceData.MaxAge}}
+                                        <div class="input-group-append">
+                                                <span class="input-group-text" id="basic-addon1">max age</span>
+                                            </div>
+                                    </label>
+                                <input v-if="ButtonStatus" type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                                    placeholder="Maximum age" v-model="PriceData.MaxAge" :class="{ 'error-input' : errors['max_age'] }">
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_age'" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Min-Max
+                                people <span class="required">*</span></label>
+                            <div class="col-sm-5">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly position-relative">
+                                        {{PriceData.Min}}
+                                        <div class="input-group-append">
+                                                <span class="input-group-text" id="basic-addon1">min people</span>
+                                            </div>
+                                    </label>
+                                <input v-if="ButtonStatus" type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                                    placeholder="Minimum" v-model="PriceData.Min" :class="{ 'error-input' : errors['min_people'] }">
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'min_people'" />
+                            </div>
+                            <div class="col-sm-5">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly position-relative">
+                                        {{PriceData.Max}}
+                                        <div class="input-group-append">
+                                                <span class="input-group-text" id="basic-addon1">max people</span>
+                                            </div>
+                                    </label>
+                                <input v-if="ButtonStatus" type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                                    placeholder="Maximum" v-model="PriceData.Max" :class="{ 'error-input' : errors['max_people'] }">
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_people'" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Duration</label>
+                            <div class="col-sm-5">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{PriceData.Nights}}</label>
+                                <input v-if="ButtonStatus" type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                                    placeholder="Nights" v-model="PriceData.Nights">
+                            </div>
+                            <div class="col-sm-5">
+                                    <label v-if="!ButtonStatus" for="staticEmail" class="readonly">{{PriceData.Days}}</label>
+                                <input  v-if="ButtonStatus" type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');" class="form-control" id="inputPassword"
+                                    placeholder="Days" v-model="PriceData.Days" :class="{ 'error-input' : errors['max_days'] }">
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_days'" />
+
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Price
+                                basis <span class="required">*</span></label>
+                            <div class="col-sm-10">
+                                <label v-if="!ButtonStatus" for="staticEmail" class="readonly"><span v-if="PriceData.PricingBasis">{{PriceData.PricingBasis ? PriceData.PricingBasis.name : ''}}</span></label>
+                                <div class="multiselect-input" v-if="ButtonStatus">
+                                    <multiselect
+                                    :options='getPricingBasis'
+                                    v-model="PriceData.PricingBasis"
+                                    label="name"
+                                    :track-by="'name'"
+                                    placeholder="Choose Pricing Basis.."
+                                    :class="{ 'error-input' : errors['pricing_basis_id'] }"
+                                    ></multiselect>
+                                    <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'pricing_basis_id'" />
+                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Price ($ USD)<span class="required">*</span>
+                                </label>
+                                <div class="col-sm-10">
+                                        <label v-if="!ButtonStatus"for="staticEmail" class="readonly">{{PriceData.Price}}</label>
+                                        <input
+                                            v-if="ButtonStatus"
+                                            type="text" @keypress="preventNonNumericalInput($event)" oninput="validity.valid||(value='');"
+                                            class="form-control"
+                                            id="inputPassword"
+                                            placeholder="eg. 1400"
+                                            v-model="PriceData.Price"
+                                            :class="{ 'error-input' : errors['base_price'] }"
+                                        />
+                                        <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'base_price'" />
+                                 </div>
+                        </div> -->
+
+                        <div class="content-block">
+                            <div class="row">
+                                <div class="col-md-10 offset-md-2">
+                                    <button v-if="ButtonStatus" class="btn default-btn save-btn" type="submit" @click.prevent="createPricingRule">Save
+                                        <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                                    </button>
+                                    <button v-if="ButtonStatus" class="btn default-btn cancel" type="submit" @click.prevent="cancelPricingRule">Cancel</button>
+                                    <button v-if="!ButtonStatus" class="btn default-btn" type="submit" @click.prevent="editPricingRule">Edit</button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>

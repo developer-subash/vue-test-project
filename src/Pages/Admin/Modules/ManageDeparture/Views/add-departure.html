@@ -1,0 +1,156 @@
+<div>
+  <div class="breadcrumb-block">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <router-link :to="{ name:'business-dashboard'}">Home</router-link>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Add Departure
+        </li>
+      </ol>
+    </nav>
+  </div>
+  <FlashMessage></FlashMessage>
+  <div class="white-box">
+    <div class="error-list m-0" v-if="errorsModal">
+      <ul class="error-msg">
+        <li v-for="(error,x) in errorsModal" :key="x">
+          <div v-for="(err,i) in error" :key="i">
+            <p> {{err}}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="table-title pb-2">
+      <h5>Add departure</h5>
+    </div>
+    <div class="sort-wrapper">
+
+      <div class="form-modified">
+        <div class="empty-data green mb-3">
+          <p>
+            You can add the applicable departure date along with destination, duration, per pax or quota, and
+            seasons for the package.
+          </p>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-6" v-if="!TrekStatusDisable">
+            <label for="Package title">Trek</label>
+            <div class="multiselect-input">
+              <multiselect :options='TrekList' label="title" :track-by="'id'" v-model="Departure.Trek"
+                placeholder="Choose Trek.." @input="getTrekPrice()" :class="{ 'error-input' : errors['trek'] }"></multiselect>
+                <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'trek'" />
+            </div>
+
+          </div>
+
+
+
+          <div class="col-lg-6">
+            <label for="Package title">Departure time</label>
+            <datetime type="time" placeholder="Departure time" use12-hour v-model="Departure.Time"
+              :class="{ 'error-input' : errors['start_time'] }"></datetime>
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'start_time'" />
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-lg-6">
+            <div class="checkbox-block">
+              <div class="form-check readonly bg-white">
+                <input class="form-check-input" type="checkbox" id="checkbox" v-model="Departure.CheckPrice" @change="priceChange">
+                <label class="form-check-label pl-4" for="exampleCheck1">Create price to Upcomming Departure</label>
+              </div>
+              <i class="fas fa-info-circle"></i>
+              <div class="pop-up-block">
+                <p class="mb-0">
+                  You can add the applicable departure date along with destination, duration, per pax or quota, and
+                  seasons for the package.
+                </p>
+              </div>
+            </div>
+
+
+          </div>
+          <!-- <div class="col-lg-6" v-if="Departure.CheckPrice">
+            <label for="">Price</label>
+            <!-- <label v-if="Departure.CheckPrice" for="staticEmail" class="readonly">{{Departure.Price}}</label> -->
+            <!-- <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="inputPassword"
+              placeholder="Price" v-model="Departure.Price" :class="{ 'error-input' : errors['price'] }" /> -->
+            <!-- <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'price'" /> -->
+          <!-- </div> -->
+          <div class="col-lg-6">
+            <label for="">Price</label>
+            <input type="text"  :disabled="PriceDisable" @keypress="preventNonNumericalInput($event)" class="form-control"
+              id="inputPassword" placeholder="Price" v-model="Departure.Price"
+              :class="{ 'error-input' : errors['price'] }" />
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'price'" />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-lg-6">
+            <label for="">Start date</label>
+            <datetime v-model="Departure.StartDate" format="yyyy-MM-dd" placeholder="Start Date"
+              :class="{ 'error-input' : errors['start_date'] }"></datetime>
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'start_date'" />
+          </div>
+          <div class="col-lg-6">
+            <label for="">End date</label>
+            <datetime v-model="Departure.EndDate" format="yyyy-MM-dd" :class="{ 'error-input' : errors['end_date'] }"
+              placeholder="End Date"></datetime>
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'end_date'" />
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-lg-6">
+            <label for="">Min quota</label>
+            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="inputPassword"
+              placeholder="Min quota" v-model="Departure.MinQuota" :class="{ 'error-input' : errors['min_quota'] }" />
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'min_quota'" />
+          </div>
+          <div class="col-lg-6">
+            <label for="">Max quota</label>
+            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control" id="inputPassword"
+              placeholder="Max quota" v-model="Departure.MaxQuota" :class="{ 'error-input' : errors['max_quota'] }" />
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'max_quota'" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="">Choose suitable season</label>
+          <div class="multiselect-input">
+            <multiselect :options='getSeasons' v-model="Departure.Season" label="name" :track-by="'name'"
+              placeholder="Choose Suitable Seasons.." :class="{ 'error-input' : errors['season_id'] }">
+            </multiselect>
+            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'season_id'" />
+          </div>
+        </div>
+
+        <!-- <label for="inputPassword" class="col-sm-2 col-form-label"
+              >Discount Type</label
+            >
+            <div class="col-sm-4">
+              <div class="form-group">
+                  <div class="multiselect-input" v-if="RequestDurationList">
+                      <multiselect :options='RequestDurationList' label="name" :track-by="'id'"
+                      :class="{ 'error-input' : errors['discount_type'] }"
+                          v-model="DiscountType" placeholder="Choose tour type.."
+                          @input="selectDiscountType()">
+                      </multiselect>
+                      <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'discount_type'" />
+                  </div>
+               
+              </div>
+            </div> -->
+
+
+      </div>
+      <button type="button" :disabled="ButtonStatus" class="btn default-btn" @click.prevent="CreateDeparture">Save
+      </button>
+      <button type="button" class="btn default-btn cancel" @click.prevent="hideDepartureModal">Cancel</button>
+    </div>
+
+
+  </div>
+</div>

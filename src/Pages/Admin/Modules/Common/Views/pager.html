@@ -1,0 +1,23 @@
+  <div class="pagination-block justify-content-center">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item" :class="getPreviousPageClass()">
+                <a class="page-link" aria-label="Previous" @click="goPreviousPage()">
+                    <span aria-hidden="true"><i class="fas fa-angle-left"></i></span>
+                    <span class="sr-only" @click="goPreviousPage()">Previous</span>
+                </a>
+            </li>
+            <li v-for="(i,index) in pages" @click.stop="goPage(i)" :class="getPageClass(i)" :key="index">
+              <a class="page-link" @click.stop="goPage(i)" :disabled="i === currentPage">
+                <span :class="getPageClass(i)">{{i}}</span>
+              </a>
+            </li>
+            <li class="page-item" :class="getNextPageClass()">
+                <a class="page-link" aria-label="Next"  @click="goNextPage()">
+                    <span aria-hidden="true"><i class="fas fa-angle-right"></i></span>
+                    <span class="sr-only" @click="goNextPage()">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,215 @@
+<div>
+    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+        <div class="container-fluid">
+            <div class="content-block">
+                    <div class="error-list" v-if="errorsMessage">
+                            <ul class="error-msg">
+                                <li v-for="(error,x) in errorsMessage" :key="x">
+                                    <div v-for="(err,i) in error" :key="i">
+                                        <p> {{err}}</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                      <div class="form-modified">
+                            <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="">First name*</label>
+                                        <div v-if="!statusDisable.Edit">
+                                           
+                                            <label for="" class="readonly" v-if="Edit.FirstName">{{Edit.FirstName}}</label>
+                                            <label for="" class="readonly" v-else>-</label>
+                                        </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword"
+                                                :class="{ 'error-input' : errors['first_name'] }" placeholder="First Name"
+                                                v-model="Edit.FirstName" />
+                                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'first_name'" />
+                                            <!-- <div class="empty-data">
+                                           <p>This field is required</p>
+                                         </div> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="">Last name*</label>
+                                        <div v-if="!statusDisable.Edit">
+                                            <label for="" class="readonly" v-if="Edit.LastName">{{Edit.LastName}}</label>
+                                            <label for="" class="readonly" v-else>-</label>
+                                        </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword"
+                                                :class="{ 'error-input' : errors['last_name'] }" placeholder="Last Name"
+                                                v-model="Edit.LastName" />
+                                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'last_name'" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="">Company name*</label>
+                                        <div v-if="!statusDisable.Edit">
+                                            <label for="" class="readonly" v-if="Edit.CompanyName">{{Edit.CompanyName}}</label>
+                                            <label for="" class="readonly" v-else>-</label>
+                                        </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword"
+                                                :class="{ 'error-input' : errors['company_name'] }" placeholder="Company Name"
+                                                v-model="Edit.CompanyName" />
+                                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'company_name'" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                            <label for="">Company Address Line1</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyAddressLine1">{{Edit.CompanyAddressLine1}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword" placeholder="Company Address Line 1"
+                                                v-model="Edit.CompanyAddressLine1" />
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">Company Address Line2</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyAddressLine2">{{Edit.CompanyAddressLine2}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword" placeholder="Company Address Line 2"
+                                                v-model="Edit.CompanyAddressLine2" />
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">City</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyCity">{{Edit.CompanyCity}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword" placeholder="Company City"
+                                                v-model="Edit.CompanyCity" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                            <label for="">Country</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyCountry">{{Edit.CompanyCountry}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword" placeholder="Company Country"
+                                                v-model="Edit.CompanyCountry" :class="{ 'error-input' : errors['country_name'] }" />
+                                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'country_name'" />
+                    
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">Zip code</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyZip">{{Edit.CompanyZip}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                                                id="inputPassword" placeholder="Company Zip" v-model="Edit.CompanyZip"
+                                                :class="{ 'error-input' : errors['country_zip'] }" />
+                                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'country_zip'" />
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">Contact 1</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyContact1">{{Edit.CompanyContact1}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                                                id="contact1" placeholder="Company Contact 1" v-model="Edit.CompanyContact1" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                            <label for="">Contact 2</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyContact2">{{Edit.CompanyContact2}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                                                id="contact2" placeholder="Company Contact 2" v-model="Edit.CompanyContact2" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                            <label for="">Contact person</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyContactPerson">{{Edit.CompanyContactPerson}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="text" placeholder="Company Contact Person"
+                                                v-model="Edit.CompanyContactPerson" />
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">Personal phone 1</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyPerson1">{{Edit.CompanyPerson1}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                                                id="inputPassword" placeholder="Personal Phone 1" v-model="Edit.CompanyPerson1" />
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">Personal phone 2</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyPerson2">{{Edit.CompanyPerson2}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" @keypress="preventNonNumericalInput($event)" class="form-control"
+                                                id="inputPassword" placeholder="Personal Phone 2" v-model="Edit.CompanyPerson2" />
+                                        </div>
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                            <label for="">Personal email</label>
+                                            <div v-if="!statusDisable.Edit" class="form-group">
+                                                    <label for="" class="readonly" v-if="Edit.CompanyPersonEmail">{{Edit.CompanyPersonEmail}}</label>
+                                                    <label for="" class="readonly" v-else>-</label>
+                                                </div>
+                                        <div class="form-group" v-else>
+                                            <input type="text" class="form-control" id="inputPassword" placeholder="Personal Email"
+                                                v-model="Edit.CompanyPersonEmail" :class="{ 'error-input' : errors['email'] }" />
+                                            <validation-error v-if="isError" :isError="isError" :errors="errors" :field="'email'" />
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                    
+                                <div class="form-group">
+                                    <button type="submit" v-if="!statusDisable.Edit" class="default-btn" @click.prevent="editContactProfile">
+                                        Edit
+                                        <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                                    </button>
+                                    <button v-if="statusDisable.Edit" type="submit" :disabled="statusDisable.Save" class="default-btn save-btn" @click.prevent="updateProfile">
+                                        Save
+                                        <spinner v-if="ui.PostLoading" :loading="ui.PostLoading"></spinner>
+                                    </button>
+                                    <button v-if="statusDisable.Edit" type="submit" class="default-btn cancel" @click.prevent="cancelEdit">
+                                        Cancel
+                                    </button>
+                                </div>
+                      </div>
+            </div>
+        </div>
+    </div>
+</div>

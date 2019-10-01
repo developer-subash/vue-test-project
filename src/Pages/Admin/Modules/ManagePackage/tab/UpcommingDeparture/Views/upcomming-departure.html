@@ -1,0 +1,221 @@
+<div>
+  <FlashMessage></FlashMessage>
+  <div class="white-box">
+      <div class="error-list" v-if="errorsMessage">
+          <ul class="error-msg" >
+              <li v-for="(error,x) in errorsMessage" :key="x">
+                  <div v-for="(err,i) in error" :key="i">
+                      <p> {{err}}</p>
+                    </div>
+              </li>
+          </ul>
+      </div>
+      <div class="sort-wrapper">
+        <div class="row">
+          <div class="col-lg-6">
+            <h5>Sort by:</h5>
+          </div>
+          <div class="col-lg-6">
+            <div class="clear text-right"><a><i class="fas fa-redo"></i> clear all filters
+              </a></div>
+          </div>
+        </div>
+          <form action="#">
+              <div class="form-modified">
+                      <div class="row">
+                              <div class="col-lg-4">
+                                  <div class="form-group">
+                                      <div class="multiselect-input" v-if="StatusList">
+                                              <multiselect
+                                              :options='StatusList'
+                                              label="name"
+                                              :track-by="'id'"
+                                              v-model="Status"
+                                              @input="getDepartureList()"
+                                              placeholder="Choose Status.."
+                                              ></multiselect>
+                                      </div>                                     
+                                  </div>
+                              </div>
+                              <!-- <div class="col-lg-4">
+                                  <button @click.prevent="getDepartureList()" class="btn default-btn mt-4">Filter</button>
+                              </div> -->
+                          </div>
+              </div>
+              
+          </form>
+      </div>
+      
+  </div>
+  <div class="manage-booking-table">
+    <div class="table-container">
+      <div class="table-responsive">
+        <table class="table" id="example">
+          <thead class="table-light-bg">
+            <tr>
+              <th>Trek title
+                <!-- <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">Start date
+                <!-- <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                End date
+                <!-- <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                Start time
+                <!-- <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                Min quota
+                <!-- <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                Max quota
+  
+                <!-- <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">Season
+                <!-- <i class="fas fa-chevron-up"></i>
+                <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                Base price($)
+              </th>
+              <th scope="col">
+                Pre-booking
+                <!-- <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                Booking
+                <!-- <i class="fas fa-chevron-down"></i> -->
+              </th>
+              <th scope="col">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(departure, index) in DepartureList" :key="index">
+              <td v-if="departure.trek.title">{{departure.trek.title}}</td>
+              <td v-else>-</td>
+              <td v-if="departure.start_date">{{ departure.start_date }}</td>
+              <td v-else>-</td>
+              <td v-if="departure.end_date">{{ departure.end_date }}</td>
+              <td v-else>-</td>
+              <td v-if="departure.start_time">{{ departure.start_time }}</td>
+              <td v-else>-</td>
+              <td v-if="departure.min_quota">{{ departure.min_quota }}</td>
+              <td v-else>-</td>
+              <td v-if="departure.max_quota">{{ departure.max_quota }}</td>
+              <td v-else>-</td>
+              <td v-if="departure.season">{{ departure.season.name}}</td>
+              <td v-else>-</td>
+              <td v-if="departure.price"><strong>{{ departure.price}}</strong></td>
+              <td v-else><strong>{{departure.trek.base_price}}</strong></td>
+              <td>
+                <div class="badge">
+                  <a href="#" class="badge badge-primary">{{
+                    departure.bookings_count
+                  }}</a>
+                </div>
+              </td>
+              <td>
+                <div class="badge">
+                  <a href="#" class="badge badge-success">{{
+                    departure.pre_bookings_count
+                  }}</a>
+                </div>
+              </td>
+              <td>
+                <div class="includes-action justify-content-start">
+                    <button
+                        v-if="departure.IsActive == true"
+                        type="button"
+                        class="btn green"
+                      >
+                        <i class="fas fa-save"></i>
+                      </button>
+                      <button
+                        v-if="departure.IsActive == true"
+                        type="button"
+                        class="btn red"
+                        @click="CancelDeparture(index, departure)"
+                      >
+                        <i class="fas fa-times"></i>
+                      </button>
+                  <button
+                    v-if="!departure.IsActive"
+                    type="button"
+                    class="btn blue"
+                    @click.prevent="EditDeparture(index, departure)"
+                  >
+                    <i class="fas fa-pen"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn red"
+                    @click.prevent="deleteDep(index, departure)"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+              
+            
+          </tbody>
+        </table>
+        <div v-if="DepartureList ==0" class="empty-data">
+            <p>
+               No Package List
+            </p>
+        </div>
+        <div class="spinner">
+            <moon-loader v-if="DepartureList" :loading="ui.IsLoadingFilter" :size="50" ></moon-loader>
+        <!-- <spinner v-if="IsLoading" :loading="IsLoading"></spinner> -->
+        </div>
+      </div>
+      <Pager @onPaging="onPaging" :pager="paging"></Pager>
+    </div>
+  </div>
+  
+  <div class="modal-wrap">
+    <div class="modal fade show" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" data-keyboard="false" data-backdrop="static" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">Delete Departure</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                  </button>
+              </div>
+             
+              <div class="modal-body">
+                  <div class="error-list" v-if="errorsEdit">
+                      <ul class="error-msg" >
+                          <li v-for="(error,x) in errorsEdit" :key="x">
+                              <div v-for="(err,i) in error" :key="i">
+                                  <p> {{err}}</p>
+                                </div>
+                          </li>
+                        </ul>
+                  </div>
+                  <p>Are you sure you want to delete this ?</p>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="button" class="btn default-btn" @click.prevent="DeleteDeparture()" >Ok</button>
+                  <button type="button" class="btn default-btn cancel" @click.prevent="hideDeleteModal()">Cancel</button>
+              </div>
+        </div>
+      </div>
+  </div>
+</div>
+</div>
+</div>
