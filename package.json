@@ -12,7 +12,7 @@
     "@smartweb/vue-flash-message": "^0.4.0",
     "@types/jquery": "^3.3.29",
     "@types/request": "^2.48.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-plugin-transform-decorators": "^6.24.1",
     "bootstrap": "^4.3.1",
     "jquery": "^3.3.1",
